@@ -1,0 +1,10 @@
+import app from "./app";
+import { config } from "./config/env";
+
+
+
+app.listen(config.APP_PORT, (): void => {
+    console.log(`Server runnin on port: ${config.APP_PORT}`);
+
+});
+
