@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import Button from "../../shared/components/Button/Button"
 import Input from "../../shared/components/Input/Input"
 import './AddItem.css'
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { createItem } from "../api/items"
 import { useAuthContext } from "../../shared/context/auth-context"
 import { useHistory } from "react-router-dom"
@@ -13,6 +13,8 @@ const AddItem = () =>{
 
     const { userId, token } = useAuthContext();
     const history = useHistory();
+
+    const [errorMessage, setErrorMessage] = useState("");
 
     const nameRef = useRef();
     const priceRef = useRef();
@@ -29,14 +31,24 @@ const AddItem = () =>{
         onSuccess: (response) => {
             console.log(response);
             queryClient.invalidateQueries("itemData");
+            setErrorMessage("");
+            history.push('/');
         },
         onError: (error) => {
             console.error(error);
+            setErrorMessage(error.response?.data?.error || "Failed to add item. Please try again.");
         }
     });
 
     const itemSubmitHandler = async event => {
         event.preventDefault();
+        setErrorMessage("");
+
+        if (!nameRef.current.value || !priceRef.current.value || !descriptionRef.current.value) {
+            setErrorMessage("Name, Price, and Description are required fields.");
+            return;
+        }
+
         createItemMutation.mutate({
             name: nameRef.current.value,
             price: priceRef.current.value,
@@ -50,11 +62,12 @@ const AddItem = () =>{
             token: token,
             userId: userId
         })
-        history.push('/');
+
     };
 
     return(
         <form className="item-form" onSubmit={itemSubmitHandler}>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             <Input id="name" ref={nameRef} type="text" label="Name"/>
             <Input id="price" ref={priceRef} type="text" label="Price"/>
             <Input id="description" ref={descriptionRef} type="text" label="Description"/>
@@ -63,7 +76,7 @@ const AddItem = () =>{
             <Input id="color" ref={colorRef} type="text" label="Color (optional)"/>
             <Input id="category" ref={categoryRef} type="text" label="Category (optional)"/>
             <Input id="other" ref={otherRef} type="text" label="Other (optional)"/>
-            <Input id="image" ref={imageRef} type="text" label="Image"/>
+            <Input id="image" ref={imageRef} type="text" label="Image (optional)"/>
             <Button id="add-item" type="submit">
                 Add Item
             </Button>

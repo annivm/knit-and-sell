@@ -1,5 +1,5 @@
 
-import {useRef, useEffect} from "react";
+import {useRef, useEffect, useState} from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useHistory } from "react-router-dom";
 import { useAuthContext } from "../../shared/context/auth-context"
@@ -28,8 +28,7 @@ const EditItem = () => {
     const imageRef = useRef();
 
     const { id: itemId } = useParams();
-    //console.log("itemId: " + itemId);
-
+    const [inputErrors, setInputErrors] = useState({});
 
     const { data, isLoading, isError } = useQuery(
         {
@@ -61,6 +60,16 @@ const EditItem = () => {
         },
         onError: (error) => {
             console.error(error);
+            if (error.response?.data?.errors) {
+                // Get all errors from the inputs
+                const errors = {};
+                error.response.data.errors.forEach((err) => {
+                    errors[err.field] = err.message;
+                });
+                setInputErrors(errors);
+            } else {
+                setInputErrors({ general: "Failed to update item. Please try again." });
+            }
         }
     });
 
@@ -82,6 +91,18 @@ const EditItem = () => {
 
     const itemSubmitHandler = async event => {
         event.preventDefault();
+        setInputErrors({});
+
+        const errors = {};
+        if (!nameRef.current.value) errors.name = "Name is required.";
+        if (!priceRef.current.value) errors.price = "Price is required.";
+        if (!descriptionRef.current.value) errors.description = "Description is required.";
+
+        if (Object.keys(errors).length > 0) {
+            setInputErrors(errors);
+            return;
+        }
+
         const updatedItem = {
             itemId: parseInt(itemId),
             name: nameRef.current.value,
@@ -106,8 +127,11 @@ const EditItem = () => {
                 <img src={`${import.meta.env.VITE_API_URL}/images/${data.image}`} alt={data.name}/>
             </div>
             <Input id="name" ref={nameRef} type="text" label="Name"/>
+            {inputErrors.name && <p className="error-message">{inputErrors.name}</p>}
             <Input id="price" ref={priceRef} type="text" label="Price"/>
+            {inputErrors.price && <p className="error-message">{inputErrors.price}</p>}
             <Input id="description" ref={descriptionRef} type="text" label="Description"/>
+            {inputErrors.description && <p className="error-message">{inputErrors.description}</p>}
             <Input id="material" ref={materialRef} type="text" label="Material"/>
             <Input id="size" ref={sizeRef} type="text" label="Size"/>
             <Input id="color" ref={colorRef} type="text" label="Color"/>
