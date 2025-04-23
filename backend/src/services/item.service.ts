@@ -5,8 +5,25 @@ import { Item, ItemCreateRequest, ItemUpdateRequest } from "../models/items.mode
 // fetchItems
 const fetchItems = async(): Promise<Item[]> => {
     try {
-        const response = await pool.query('SELECT * FROM items');
-        console.log(response.rows);
+        const query = `
+        SELECT
+            items.id,
+            items.name,
+            items.price,
+            items.description,
+            items.material,
+            items.size,
+            items.color,
+            items.category,
+            items.other,
+            items.image,
+            items.owner_id,
+            users.name AS owner_name
+        FROM items
+        INNER JOIN users ON items.owner_id = users.id
+        `;
+        const response = await pool.query(query);
+        //console.log(response.rows);
         return response.rows;
 
     } catch (error) {
@@ -15,7 +32,33 @@ const fetchItems = async(): Promise<Item[]> => {
     }
 }
 
-
+const fetchItemsByOwner = async (ownerId: string): Promise<Item[]> => {
+    try {
+        const query = `
+        SELECT
+            items.id,
+            items.name,
+            items.price,
+            items.description,
+            items.material,
+            items.size,
+            items.color,
+            items.category,
+            items.other,
+            items.image,
+            items.owner_id,
+            users.name AS owner_name
+        FROM items
+        INNER JOIN users ON items.owner_id = users.id
+        WHERE items.owner_id = $1
+        `;
+        const { rows } = await pool.query(query, [ownerId]);
+        return rows;
+    } catch (error) {
+        console.error('Database query error:', error);
+        throw new Error('Database query failed');
+    }
+};
 
 // fetchItemById
 const fetchItemById = async(id: number): Promise<Item | null> => {
@@ -36,9 +79,22 @@ const fetchItemById = async(id: number): Promise<Item | null> => {
 // insertItem
 const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
     try {
-        const { name, price, description, image } = item
-        const sql = 'INSERT into items(name, price, description, image) VALUES ($1, $2, $3, $4) RETURNING *;'
-        const { rows } = await pool.query(sql, [name, price, description, image])
+        const { name, price, description, material, size, color, category, other, image, owner } = item
+        const sql = `INSERT into items
+                    (name, price, description, material, size, color, category, other, image, owner_id)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;`
+        const { rows } = await pool.query(sql, [
+            name,
+            price,
+            description,
+            material || null,
+            size || null,
+            color || null,
+            category || null,
+            other || null,
+            image,
+            owner
+        ])
         //console.log(rows);
 
         return rows[0]
@@ -93,9 +149,22 @@ const deleteItemById = async (id: number): Promise<number | null> =>{
 // updateItemById
 const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
     try {
-        const { id, name, description, price, image } = item
-        const sql = 'UPDATE items SET name=$1, description=$2, price=$3, image=$4 WHERE id=$5 RETURNING *;'
-        const { rows } = await pool.query(sql,[name, description, price, image, id])
+        const { id, name, description, price, material, size, color, category, other, image } = item
+        const sql = `UPDATE items
+                    SET name=$1, description=$2, price=$3, material=$4, size=$5, color=$6, category=$7, other=$8, image=$9
+                    WHERE id=$10 RETURNING *;`
+        const { rows } = await pool.query(sql,[
+            name,
+            description,
+            price,
+            material || null,
+            size || null,
+            color || null,
+            category || null,
+            other || null,
+            image,
+            id
+        ])
 
 
         return rows[0]
@@ -108,6 +177,7 @@ const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
 
 export {
     fetchItems,
+    fetchItemsByOwner,
     fetchItemById,
     insertItem,
     findByName,

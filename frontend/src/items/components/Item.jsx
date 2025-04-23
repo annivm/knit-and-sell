@@ -13,11 +13,16 @@ import Card from '../../shared/components/Card/Card';
 import Modal from '../../shared/components/Modal/Modal';
 
 
-const Item = props => {
+const Item = ({ itemId, name, price, description, material, size, color, category, other, image, owner,isOwner }) => {
 
     const history = useHistory();
-    const { isLoggedIn, token } = useAuthContext();
+    const { token } = useAuthContext();
     const queryClient = useQueryClient();
+
+    const [showDescription, setShowDescription] = useState(false);
+    const [showFullImage, setShowFullImage] = useState(false);
+
+    const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const showConfirmationHandler = () => setShowConfirmationModal(true);
@@ -37,34 +42,85 @@ const Item = props => {
     const deleteConfirmedHandler = () => {
         setShowConfirmationModal(false)
         deleteItemMutation.mutate({
-            itemId: props.itemId,
+            itemId: itemId,
             token: token
         })
     }
 
     const handleEdit = () => {
-        history.push(`/items/edit/${props.itemId}`);
+        history.push(`/items/edit/${itemId}`);
     }
+
+    const toggleDescriptionHandler = () => {
+        setShowDescription((prevState) => !prevState);
+        setShowFullImage((prevState) => !prevState);
+    };
+
+    const handleBuy = () => {
+        setShowPurchaseModal(true); // Show the purchase modal
+    };
+
+    const closePurchaseModalHandler = () => {
+        setShowPurchaseModal(false); // Close the purchase modal
+    };
+
+    const itemDetails = [
+        { label: "🧵Material", value: material },
+        { label: "📏Size", value: size },
+        { label: "🎨Color", value: color },
+        { label: "🗂️Category", value: category },
+        { label: "💬Other", value: other },
+    ];
+    // Filter out rows where the value is empty or null
+    const filteredDetails = itemDetails.filter(detail => detail.value);
 
     return(
         <>
             <li className='item'>
                 <Card className="item__content">
-                    <div className='item__image'>
-                        <img src={`${import.meta.env.VITE_API_URL}/images/${props.image}`} alt={props.name}/>
+                    <div className={`item__image ${showFullImage ? "item__image--scaled" : ""}`}>
+                        <img src={`${import.meta.env.VITE_API_URL}/images/${image}`} alt={name}/>
                         {/* kuva kansiosta -> {`http://localhost:5001/images/${image}`} */}
                     </div>
                     <div className='item__info'>
-                        <h3>{props.name} - {props.price}</h3>
+                        <h3>{name} - {price} €</h3>
+                        {showDescription && <h4>Seller: {owner}</h4>}
+                        {showDescription && <p>{description}</p>}
+                        {showDescription && (
+                            <div className="item__details">
+                                <table className="item__details-table">
+                                    <tbody>
+                                        {filteredDetails.map((detail, index) => (
+                                            <tr key={index}>
+                                                <td><strong>{detail.label}:</strong></td>
+                                                <td>{detail.value}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
                     </div>
-                    {isLoggedIn && (
+                    {isOwner ? (
                         <div className='item__actions'>
-                            <Button onClick={handleEdit}>Edit</Button>
+                            <Button onClick={toggleDescriptionHandler}>
+                                {showDescription ? 'Hide' : 'View'}
+                            </Button>
+                            <Button inverse onClick={handleEdit}>Edit</Button>
                             <Button danger onClick={showConfirmationHandler}>Delete</Button>
+                        </div>
+                    ) : (
+                        <div className='item__actions'>
+                            <Button onClick={toggleDescriptionHandler}>
+                                {showDescription ? 'Hide' : 'View'}
+                            </Button>
+                            <Button onClick={handleBuy}>Buy</Button>
                         </div>
                     )}
                 </Card>
             </li>
+            {/* Modal for editing */}
             <Modal
                 show = {showConfirmationModal}
                 header="Are you sure?"
@@ -77,6 +133,21 @@ const Item = props => {
                 }
             >
                 <p>Are you sure? Once it´ gone, it´s gone! 😰</p>
+            </Modal>
+            {/* Purchase Modal */}
+            <Modal
+                show={showPurchaseModal}
+                header="Purchase Successful✨"
+                footerClass="place-item__modal-actions"
+                footer={
+                    <Button onClick={closePurchaseModalHandler}>Close</Button>
+                }
+            >
+                <p>Thank you for your purchase!</p>
+                <p>You will recieve a confirmation email shortly.</p>
+                <p>Enjoy your new item!</p>
+                <p>Best regards, {owner}</p>
+                <p className='modal__emoji'>🫱🏻‍🫲🏻</p>
             </Modal>
         </>
     )

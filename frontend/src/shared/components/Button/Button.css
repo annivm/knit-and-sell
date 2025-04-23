@@ -10,15 +10,20 @@
     margin-right: 1rem;
     text-decoration: none;
     display: inline-block;
+
   }
   .button:focus {
     outline: none;
   }
-  .button:hover,
-  .button:active {
+  .button:hover {
     background: #463f3a;
     border-color: #463f3a;
-  }
+}
+
+.button:active {
+    background: #463f3a;
+    border-color: #463f3a;
+}
   .button--inverse {
     background: transparent;
     color: #8a817c;

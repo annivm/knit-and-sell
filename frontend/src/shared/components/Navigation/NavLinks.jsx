@@ -10,14 +10,20 @@ const NavLinks = () => {
             <li>
                 <NavLink to="/" exact>ALL ITEMS</NavLink>
             </li>
+            {!isLoggedIn && (
+                <li>
+                <NavLink to="/auth">AUTHENTICATE</NavLink>
+            </li>
+            )}
+
+            {isLoggedIn && (
+                <li>
+                <NavLink to="/items/myitems">MY ITEMS</NavLink>
+                </li>
+            )}
             {isLoggedIn && (
             <li>
                 <NavLink to="/items/new">ADD ITEM</NavLink>
-            </li>
-            )}
-            {!isLoggedIn && (
-            <li>
-                <NavLink to="/auth">AUTHENTICATE</NavLink>
             </li>
             )}
             {isLoggedIn && (

@@ -13,7 +13,7 @@ const signUpUser = async (req: Request, res: Response) => {
 
     const exist = await findByEmail(validUserSignUpData.email);
     if (exist) {
-        res.status(422).send('User already exists');
+        res.status(422).json({ error: "User already exists" })
         return;
     }
 
@@ -100,12 +100,12 @@ const loginUser = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).send('Could not log you in, please check your credentials and try again');
+        res.status(500).json({ message:'Could not log you in, please check your credentials and try again'});
         return;
     }
 
     if (!isValidPassword){
-        res.status(401).send('Could not identify user, credentials seem to be wrong');
+        res.status(401).json({ message: 'Could not identify user, credentials seem to be wrong'});
         return;
     }
 
@@ -124,7 +124,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).send('Something went wrong with the login, please try again');
+        res.status(500).json({ message: 'Something went wrong with the login, please try again' });
         return;
     }
 

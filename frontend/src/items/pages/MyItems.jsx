@@ -1,18 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import ItemsList from "../components/ItemsList";
 import LoadingSpinner from "../../shared/components/LoadingSpinner/LoadingSpinner";
+import { useAuthContext } from '../../shared/context/auth-context'
 
-import { getItems } from '../api/items';
-import { useAuthContext } from "../../shared/context/auth-context";
+import { getMyItems } from '../api/items';
 
 
-const Items = () => {
-
-    const { userId } = useAuthContext();
+const MyItems = () => {
+    const { token, userId } = useAuthContext();
 
     const { isLoading, error, data } = useQuery({
-        queryKey: ['itemsData'],
-        queryFn: () => getItems()
+        queryKey: ['myItems'],
+        queryFn: () => getMyItems({ token }),
 
     })
     if(isLoading){
@@ -27,9 +26,9 @@ const Items = () => {
     }
 
     return (
-        <ItemsList items={data} userId={userId} heading={"Items"}/>
+        <ItemsList items={data} userId={userId} heading={"My Items"}/>
     )
 }
 
 
-export default Items
+export default MyItems

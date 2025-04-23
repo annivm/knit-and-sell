@@ -17,6 +17,8 @@ import { AuthContextProvider } from './shared/context/AuthContextProvider'
 import { useAuthContext } from './shared/context/auth-context'
 import EditItem from './items/pages/EditItem'
 import Items from './items/pages/Items'
+import MyItems from './items/pages/MyItems'
+import ScrollToTop from './shared/components/ScrollToTop'
 
 const queryClient = new QueryClient()
 
@@ -29,6 +31,9 @@ function AppContent() {
         <Switch>
         <Route path="/" exact>
           <Items />
+        </Route>
+        <Route path="/items/myitems" exact>
+          <MyItems />
         </Route>
         <Route path="/items/new" exact>
           <AddItem />
@@ -53,6 +58,7 @@ function AppContent() {
   }
   return (
       <Router>
+        <ScrollToTop />
         <MainNavigation />
         <main>
           {routes}

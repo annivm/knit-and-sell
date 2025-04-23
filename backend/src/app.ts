@@ -1,8 +1,9 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from 'cors'
 import dotenv from 'dotenv';
-import itemRoute from "./routes/item.route";
-import { pool } from "./db/db";
+import itemRoutes from "./routes/item.route";
+import usersRoutes from "./routes/users.route";
+
 
 
 dotenv.config();
@@ -18,16 +19,8 @@ app.get('/', (req: Request, res: Response): void => {
     res.send('API is running');
 });
 
-app.use('/api/items/', itemRoute);
+app.use('/api/items/', itemRoutes);
+app.use('/api/users', usersRoutes);
 
-app.get('/api/test-db', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT 1');
-        res.json({ message: 'Database connection successful', result: result.rows });
-    } catch (error) {
-        console.error('Database connection error:', error);
-        res.status(500).json({ message: 'Database connection error', error});
-    }
-});
 
 export default app;

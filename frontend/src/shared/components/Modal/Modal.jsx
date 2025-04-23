@@ -19,7 +19,7 @@ const ModalOverlay = props => {
         </div>
       </form>
       <footer className={`modal__footer ${props.footerClass}`}>
-        <h2>{props.footer}</h2>
+        <h2 className='modal__footer__h2'>{props.footer}</h2>
       </footer>
     </div>
   );

@@ -1,6 +1,6 @@
 
 .item {
-    margin: 1rem 0;
+    margin: 2rem 0;
   }
   .item__content {
     padding: 0;
@@ -13,19 +13,74 @@
     width: 100%;
     height: 12.5rem;
     margin-right: 1.5rem;
+    overflow: hidden; /* Prevent overflow */
+    text-align: center;
+    transition: height 0.3s ease; /* Smooth transition for height changes */
   }
+
   .item__image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* Default: Cover the container */
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+  }
+
+  .item__image--scaled {
+    height: auto; /* Allow the image to expand to its full height */
+  }
+
+  .item__image--scaled img {
+    object-fit: contain; /* Ensure the entire image is visible */
+    transform: scale(1.1); /* Slight zoom effect for better visibility */
   }
   .item__info h2,
   .item__info h3,
   .-item__actions {
     padding: 1rem;
     text-align: center;
-    border-top: 1px solid #ccc;
   }
+
+  .item__info h3 {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ccc; /* Add a line below the name & price */
+    text-align: center;
+}
+
+.item__info p,
+.item__info h4 {
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.item__details-table {
+  border-collapse: collapse;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 1rem;
+}
+
+.item__details-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  vertical-align: top;
+}
+
+.item__details-table tr {
+  background-color: #f9f9f9;
+}
+.item__details-table td:first-child {
+  width: 30%; /* Set a fixed width for the first column */
+  font-weight: bold; /* Make the labels bold */
+  white-space: nowrap; /* Prevent labels from wrapping */
+}
+
+.item__details-table td:last-child {
+  word-wrap: break-word; /* Allow the second column to wrap */
+  word-break: break-word; /* Break long words if necessary */
+}
+
+
   .item__modal-content {
     padding: 0;
   }

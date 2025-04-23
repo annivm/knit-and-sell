@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { deleteItemById, fetchItemById, fetchItems, findByName, insertItem, updateItemById } from "../services/item.service";
+import { deleteItemById, fetchItemById, fetchItems, fetchItemsByOwner, findByName, insertItem, updateItemById } from "../services/item.service";
 import { itemByIdRequestSchema, itemCreateRequestSchema, itemUpdateRequestSchema } from "../models/items.model";
 import { ZodError } from "zod";
+import jwt from 'jsonwebtoken';
+import { config } from "../config/env";
 
 
 const getItems = async (req: Request, res:Response): Promise<void> =>{
@@ -15,6 +17,33 @@ const getItems = async (req: Request, res:Response): Promise<void> =>{
         res.status(500).json({message: `error fetching items(${error})`})
     }
 }
+
+const getMyItems = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Extract the token from the Authorization header
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+
+        // Verify the token and extract the user ID
+        const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
+        const userId = decodedToken.id;
+
+        if (!userId) {
+            res.status(400).json({ error: 'Invalid user ID in token' });
+            return;
+        }
+
+        // Fetch items for the logged-in user
+        const data = await fetchItemsByOwner(userId);
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching user items:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 const getItemById = async (req: Request, res:Response): Promise<void> =>{
@@ -35,6 +64,15 @@ const getItemById = async (req: Request, res:Response): Promise<void> =>{
 
 const createItem = async (req: Request, res:Response): Promise<void> =>{
     try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+        const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
+        const ownerId = decodedToken.id; // Extract the owner_id from the token
+        req.body.owner = ownerId;
+
        const name = req.body.name;
        const existingItem = await findByName(name);
 
@@ -99,13 +137,12 @@ const updateItem = async (req: Request, res: Response) => {
         const validatedItem = itemUpdateRequestSchema.parse(req.body)
 
         const exist = await fetchItemById(validatedItem.id)
-        console.log(exist);
 
         if (!exist){
             res.status(400).json({ error: "Trying to update a non existing item" })
             return
         }
-        console.log(validatedItem);
+        //console.log(validatedItem);
 
         const data = await updateItemById(validatedItem)
         res.status(200).send(data)
@@ -122,6 +159,7 @@ const updateItem = async (req: Request, res: Response) => {
 
 export {
     getItems,
+    getMyItems,
     getItemById,
     createItem,
     deleteItem,

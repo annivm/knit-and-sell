@@ -11,12 +11,17 @@ const AddItem = () =>{
 
     const queryClient = useQueryClient();
 
-    const { token } = useAuthContext();
+    const { userId, token } = useAuthContext();
     const history = useHistory();
 
     const nameRef = useRef();
     const priceRef = useRef();
     const descriptionRef = useRef();
+    const materialRef = useRef();
+    const sizeRef = useRef();
+    const colorRef = useRef();
+    const categoryRef = useRef();
+    const otherRef = useRef();
     const imageRef = useRef();
 
     const createItemMutation = useMutation({
@@ -36,8 +41,14 @@ const AddItem = () =>{
             name: nameRef.current.value,
             price: priceRef.current.value,
             description: descriptionRef.current.value,
+            material: materialRef.current?.value || "",
+            size: sizeRef.current.value,
+            color: colorRef.current?.value || "",
+            category: categoryRef.current?.value || "",
+            other: otherRef.current?.value || "",
             image: imageRef.current.value,
-            token: token
+            token: token,
+            userId: userId
         })
         history.push('/');
     };
@@ -47,6 +58,11 @@ const AddItem = () =>{
             <Input id="name" ref={nameRef} type="text" label="Name"/>
             <Input id="price" ref={priceRef} type="text" label="Price"/>
             <Input id="description" ref={descriptionRef} type="text" label="Description"/>
+            <Input id="material" ref={materialRef} type="text" label="Material"/>
+            <Input id="size" ref={sizeRef} type="text" label="Size"/>
+            <Input id="color" ref={colorRef} type="text" label="Color"/>
+            <Input id="category" ref={categoryRef} type="text" label="Category"/>
+            <Input id="other" ref={otherRef} type="text" label="Other"/>
             <Input id="image" ref={imageRef} type="text" label="Image"/>
             <Button id="add-item" type="submit">
                 Add Item
