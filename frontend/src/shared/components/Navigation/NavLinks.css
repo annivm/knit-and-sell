@@ -22,9 +22,9 @@
 .nav-links a:hover,
 .nav-links a:active,
 .nav-links a.active {
-  background: #ccc5b9;
+  background: #d77a61;
   border-color: #292929;
-  color: #292929;
+  color: white;
 }
 .nav-links button {
   cursor: pointer;
@@ -61,7 +61,7 @@
 
   .nav-links button:hover,
   .nav-links button:active {
-    background: #bcb8b1;
-    color: #292929;
+    background: #d77a61;
+    color: #eff1f3;
   }
 }

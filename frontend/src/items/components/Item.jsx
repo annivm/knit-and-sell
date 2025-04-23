@@ -65,11 +65,11 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
     };
 
     const itemDetails = [
-        { label: "🧵Material", value: material },
-        { label: "📏Size", value: size },
-        { label: "🎨Color", value: color },
-        { label: "🗂️Category", value: category },
-        { label: "💬Other", value: other },
+        { label: "🧵 Material", value: material },
+        { label: "📏 Size", value: size },
+        { label: "🎨 Color", value: color },
+        { label: "🗂️ Category", value: category },
+        { label: "💬 Other", value: other },
     ];
     // Filter out rows where the value is empty or null
     const filteredDetails = itemDetails.filter(detail => detail.value);

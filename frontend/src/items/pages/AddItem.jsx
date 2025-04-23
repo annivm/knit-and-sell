@@ -58,11 +58,11 @@ const AddItem = () =>{
             <Input id="name" ref={nameRef} type="text" label="Name"/>
             <Input id="price" ref={priceRef} type="text" label="Price"/>
             <Input id="description" ref={descriptionRef} type="text" label="Description"/>
-            <Input id="material" ref={materialRef} type="text" label="Material"/>
-            <Input id="size" ref={sizeRef} type="text" label="Size"/>
-            <Input id="color" ref={colorRef} type="text" label="Color"/>
-            <Input id="category" ref={categoryRef} type="text" label="Category"/>
-            <Input id="other" ref={otherRef} type="text" label="Other"/>
+            <Input id="material" ref={materialRef} type="text" label="Material (optional)"/>
+            <Input id="size" ref={sizeRef} type="text" label="Size (optional)"/>
+            <Input id="color" ref={colorRef} type="text" label="Color (optional)"/>
+            <Input id="category" ref={categoryRef} type="text" label="Category (optional)"/>
+            <Input id="other" ref={otherRef} type="text" label="Other (optional)"/>
             <Input id="image" ref={imageRef} type="text" label="Image"/>
             <Button id="add-item" type="submit">
                 Add Item

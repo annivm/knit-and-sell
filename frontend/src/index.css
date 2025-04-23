@@ -8,9 +8,19 @@ html {
   font-family: 'Open Sans', sans-serif;
 }
 
+/*
+COLOR PALET
+223843 TUMMA
+eff1f3 VAALEA
+dbd3d8 TUMMEMPI VAALEA
+d8b4a0 BEIGE
+d77a61 ORANSSI
+*/
+
+
 body {
   margin: 0;
-  background: #f4f3ee;
+  background: #eff1f3;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
