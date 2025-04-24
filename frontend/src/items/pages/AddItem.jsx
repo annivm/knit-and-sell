@@ -58,7 +58,7 @@ const AddItem = () =>{
             color: colorRef.current?.value || "",
             category: categoryRef.current?.value || "",
             other: otherRef.current?.value || "",
-            image: imageRef.current.value,
+            image: imageRef.current.value || "default.png",
             token: token,
             userId: userId
         })

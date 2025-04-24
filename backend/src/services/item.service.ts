@@ -92,7 +92,7 @@ const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
             color || null,
             category || null,
             other || null,
-            image,
+            image || "default.png",
             owner
         ])
         //console.log(rows);
@@ -162,7 +162,7 @@ const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
             color || null,
             category || null,
             other || null,
-            image,
+            image || "default.png",
             id
         ])
 
