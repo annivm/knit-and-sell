@@ -62,26 +62,9 @@ const fetchItemsByOwner = async (ownerId: string): Promise<Item[]> => {
 
 // fetchItemById
 const fetchItemById = async(id: number): Promise<Item | null> => {
-    const query = `
-        SELECT
-            items.id,
-            items.name,
-            items.price,
-            items.description,
-            items.material,
-            items.size,
-            items.color,
-            items.category,
-            items.other,
-            items.image,
-            items.owner_id,
-            users.name AS owner_name
-        FROM items
-        INNER JOIN users ON items.owner_id = users.id
-        WHERE items.id=$1
-    `;
+
     try {
-        const response = await pool.query(query, [id])
+        const response = await pool.query('SELECT * FROM items WHERE id=$1;', [id])
 
         if(response.rows.length === 0){
             return null

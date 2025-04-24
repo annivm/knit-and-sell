@@ -285,6 +285,7 @@ describe('DELETE item endpoint', () => {
             description: 'Test desc',
             owner_id: loggedInUser.id
         };
+        // console.log("item to delete: " + item.name)
         const postResponse = await request(app)
         .post('/api/items')
         .set('Accept', 'application/json')
@@ -293,6 +294,9 @@ describe('DELETE item endpoint', () => {
         .send(item)
 
         const postId = postResponse.body.id
+        // console.log("postId: " + postId);
+        // console.log("loggedin user: " +loggedInUser.id);
+
         const response = await request(app)
             .delete(`/api/items/${postId}`)
             .set('Accept', 'application/json')
@@ -301,7 +305,7 @@ describe('DELETE item endpoint', () => {
         expect(response.body).toEqual({ message: "Item deleted successfully" })
     });
 
-    test('should check if item with id exist', async() => {
+    test('should not allow delete non-existing item', async() => {
         const response = await request(app)
             .delete('/api/items/10000001')
             .set('Accept', 'application/json')

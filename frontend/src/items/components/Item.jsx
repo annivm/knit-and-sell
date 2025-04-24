@@ -132,7 +132,7 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
                     </>
                 }
             >
-                <p>Are you sure? Once it´ gone, it´s gone! 😰</p>
+                <p>Are you sure? Once it´s gone, it´s gone! 😰</p>
             </Modal>
             {/* Purchase Modal */}
             <Modal
@@ -158,6 +158,13 @@ Item.propTypes = {
     name: PropTypes.string.isRequired,
     price: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    material: PropTypes.string,
+    size: PropTypes.string,
+    color: PropTypes.string,
+    category: PropTypes.string,
+    other: PropTypes.string,
+    owner: PropTypes.string.isRequired,
+    isOwner: PropTypes.bool.isRequired,
     image: PropTypes.string.isRequired
 }
 

@@ -114,19 +114,19 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
         const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
         if (!decodedToken.id || decodedToken.id === undefined) {}
         const userId = decodedToken.id;
-        console.log("userId: " + userId);
+        //console.log("userId: " + userId);
 
         const validatedId = itemByIdRequestSchema.parse(req.params.id)
         //console.log(validatedId);
 
         const item = await fetchItemById(validatedId);
-        //console.log(item)
+        //console.log(item?.id)
 
         if (!item) {
             res.status(404).json({ error: "Item not found" });
             return
         }
-        console.log(item);
+        //console.log(item);
         if (item.owner_id !== userId) {
             res.status(403).json({ error: 'Forbidden' });
             return;

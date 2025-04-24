@@ -5,71 +5,81 @@ import jwt from 'jsonwebtoken';
 import { loginUserRequestSchema, signUpUserSchema, UserCreateRequest } from "../models/users.model";
 import { config } from "../config/env";
 import { createUser, findByEmail } from '../services/users.service';
+import { ZodError } from "zod";
 
 
 const signUpUser = async (req: Request, res: Response) => {
+    try{
+        const validUserSignUpData = signUpUserSchema.parse(req.body);
 
-    const validUserSignUpData = signUpUserSchema.parse(req.body);
-
-    const exist = await findByEmail(validUserSignUpData.email);
-    if (exist) {
-        res.status(422).json({ error: "User already exists" })
-        return;
-    }
-
-
-    let hashedPassword;
-
-    try {
-        hashedPassword = await bcrypt.hash(validUserSignUpData.password, 12);
-    } catch (error) {
-        console.log('Error hashing password: ', error);
-
-        res.status(500).json({ message: "Could not create user, please try again." });
-    }
-
-    const newUser: UserCreateRequest = {
-        id: v4(),
-        name: validUserSignUpData.name,
-        email: validUserSignUpData.email,
-        password: hashedPassword!
-    }
-    //console.log('New user: ');
-    //console.log(newUser);
-
-
-    try {
-        const result = await createUser(newUser);
-
-        if (!result) {
-            res.status(500).json({ message: "Could not create user, please try again." });
+        const exist = await findByEmail(validUserSignUpData.email);
+        if (exist) {
+            res.status(422).json({ error: "User already exists" })
             return;
         }
 
-        const token = jwt.sign(
-            {
-                id: newUser.id,
-                email: newUser.email
-            },
-            config.JWT_KEY,  // secret key
-            { expiresIn: '1h' } // token expires in 1 hour
-        );
-        //console.log('token');
-        //console.log(token);
 
+        let hashedPassword;
 
+        try {
+            hashedPassword = await bcrypt.hash(validUserSignUpData.password, 12);
+        } catch (error) {
+            console.log('Error hashing password: ', error);
 
-        res.status(201).json(
-            {
-                token: token,
-                id: newUser.id,
-                email: newUser.email
+            res.status(500).json({ message: "Could not create user, please try again." });
+        }
+
+        const newUser: UserCreateRequest = {
+            id: v4(),
+            name: validUserSignUpData.name,
+            email: validUserSignUpData.email,
+            password: hashedPassword!
+        }
+
+        try {
+            const result = await createUser(newUser);
+
+            if (!result) {
+                res.status(500).json({ message: "Could not create user, please try again." });
+                return;
             }
-        );
-    } catch (error) {
-        console.log('Error creating user: ', error);
 
-        res.status(500).json({ message: "SignUp failed" });
+            const token = jwt.sign(
+                {
+                    id: newUser.id,
+                    email: newUser.email
+                },
+                config.JWT_KEY,  // secret key
+                { expiresIn: '1h' } // token expires in 1 hour
+            );
+            //console.log('token');
+            //console.log(token);
+
+            res.status(201).json(
+                {
+                    token: token,
+                    id: newUser.id,
+                    email: newUser.email
+                }
+            );
+        } catch (error) {
+            console.log('Error creating user: ', error);
+
+            res.status(500).json({ message: "SignUp failed" });
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            if ('errors' in error) {
+                res.status(400).json({ error: "Missing a value" });
+                return;
+            }
+        }
+        if (error instanceof ZodError) {
+            const errorMessages = error.errors.map(err => err.message);
+            res.status(400).json({ error: errorMessages.join(", ") });
+            return;
+        }
+        return;
     }
 }
 
