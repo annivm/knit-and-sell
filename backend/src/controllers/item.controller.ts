@@ -70,7 +70,7 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
             return;
         }
         const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
-        const ownerId = decodedToken.id; // Extract the owner_id from the token
+        const ownerId = decodedToken.id;
         req.body.owner = ownerId;
 
        const name = req.body.name;
@@ -105,15 +105,31 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
 
 const deleteItem = async (req: Request, res: Response): Promise<void> => {
     try {
+        // check if the logged in user is the owner
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+        const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
+        if (!decodedToken.id || decodedToken.id === undefined) {}
+        const userId = decodedToken.id;
+        console.log("userId: " + userId);
+
         const validatedId = itemByIdRequestSchema.parse(req.params.id)
-        console.log(validatedId);
+        //console.log(validatedId);
 
         const item = await fetchItemById(validatedId);
-        console.log(item)
+        //console.log(item)
 
         if (!item) {
             res.status(404).json({ error: "Item not found" });
             return
+        }
+        console.log(item);
+        if (item.owner_id !== userId) {
+            res.status(403).json({ error: 'Forbidden' });
+            return;
         }
 
         const data = await deleteItemById(validatedId)

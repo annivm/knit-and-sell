@@ -62,8 +62,26 @@ const fetchItemsByOwner = async (ownerId: string): Promise<Item[]> => {
 
 // fetchItemById
 const fetchItemById = async(id: number): Promise<Item | null> => {
+    const query = `
+        SELECT
+            items.id,
+            items.name,
+            items.price,
+            items.description,
+            items.material,
+            items.size,
+            items.color,
+            items.category,
+            items.other,
+            items.image,
+            items.owner_id,
+            users.name AS owner_name
+        FROM items
+        INNER JOIN users ON items.owner_id = users.id
+        WHERE items.id=$1
+    `;
     try {
-        const response = await pool.query('SELECT * FROM items WHERE id=$1;', [id])
+        const response = await pool.query(query, [id])
 
         if(response.rows.length === 0){
             return null
@@ -79,7 +97,7 @@ const fetchItemById = async(id: number): Promise<Item | null> => {
 // insertItem
 const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
     try {
-        const { name, price, description, material, size, color, category, other, image, owner } = item
+        const { name, price, description, material, size, color, category, other, image, owner_id } = item
         const sql = `INSERT into items
                     (name, price, description, material, size, color, category, other, image, owner_id)
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;`
@@ -93,7 +111,7 @@ const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
             category || null,
             other || null,
             image || "default.png",
-            owner
+            owner_id
         ])
         //console.log(rows);
 
@@ -132,7 +150,7 @@ const deleteItemById = async (id: number): Promise<number | null> =>{
         const sql = 'DELETE FROM items WHERE id = $1;';
         const response = await pool.query(sql, [id]);
 
-        console.log(response);
+        //console.log(response);
 
         if (response.rowCount === 0){
             return null

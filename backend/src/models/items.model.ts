@@ -11,7 +11,7 @@ export const itemSchema = z.object (
         color: z.string(),
         category: z.string(),
         image: z.string().min(5, "Filename + extension").optional().or(z.literal('')),
-        owner: z.string().uuid(),
+        owner_id: z.string().uuid(),
         created: z.string(),
         updated: z.string(),
     }
@@ -30,7 +30,7 @@ export const itemCreateRequestSchema = z.object(
         category: z.string().optional(),
         other: z.string().optional(),
         image: z.string().min(5, "Filename + extension").optional().or(z.literal('')),
-        owner: z.string().uuid()
+        owner_id: z.string().uuid()
     }
 )
 
