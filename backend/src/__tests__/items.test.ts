@@ -38,6 +38,7 @@ afterEach( async () => {
 
 afterAll( async () => {
     await pool.query("DELETE FROM items WHERE name LIKE 'Test name' OR price LIKE 'Test Price' OR description LIKE 'Test desc'")
+    await pool.query("DELETE FROM items WHERE name LIKE 'Updated name'")
     await pool.end()
 });
 
@@ -332,4 +333,101 @@ describe('DELETE item endpoint', () => {
         expect(response.body).toEqual({ error: 'Forbidden' });
     });
 
+})
+
+describe('PUT item endpoint', () => {
+    test('should update item by id', async() => {
+        const item = {
+            name: 'Test name',
+            price: 'Test price',
+            description: 'Test desc',
+            owner_id: loggedInUser.id
+        };
+        // console.log("item to update: " + item.name)
+        const postResponse = await request(app)
+            .post('/api/items')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + loggedInUser.token)
+            .set('Content', 'application/json')
+            .send(item)
+
+        const postId = postResponse.body.id
+        // console.log("postId: " + postId);
+        // console.log("loggedin user: " +loggedInUser.id);
+
+        const updatedItem = {
+            id: postId,
+            name: 'Updated name',
+            price: 'Updated price',
+            description: 'Updated desc'
+        }
+
+        const response = await request(app)
+            .put(`/api/items`)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + loggedInUser.token)
+            .send(updatedItem)
+
+        expect(response.status).toEqual(200)
+        expect(response.body).toEqual(
+                expect.objectContaining({
+                  id: postId,
+                  name: 'Updated name',
+                  price: 'Updated price',
+                })
+        )
+    })
+
+    test('should not allow update non-existing item', async() => {
+        const updatedItem = {
+            id: 10000001,
+            name: 'Test name',
+            price: 'Test price',
+            description: 'Test desc'
+        }
+
+        const response = await request(app)
+            .put(`/api/items`)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + loggedInUser.token)
+            .send(updatedItem)
+
+        expect(response.status).toEqual(400)
+        expect(response.body).toEqual({ error: "Trying to update a non existing item" })
+    })
+
+    test('should not allow update withou authentication', async() => {
+        const updatedItem = {
+            id: 1,
+            name: 'Test name',
+            price: 'Test price',
+            description: 'Test desc'
+        }
+
+        const response = await request(app)
+            .put(`/api/items`)
+            .set('Accept', 'application/json')
+            .send(updatedItem)
+
+        expect(response.status).toEqual(401)
+        expect(response.body).toEqual({ message: 'Authentication failed: No token provided'})
+    })
+
+    test('should not allow update if not owner', async() => {
+        const updatedItem = {
+            id: 1,
+            name: 'Test name',
+            price: 'Test price',
+            description: 'Test desc'
+        }
+
+        const response = await request(app)
+            .put(`/api/items`)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + loggedInUser.token)
+            .send(updatedItem)
+
+        expect(response.status).toEqual(403)
+        expect(response.body).toEqual({ error: 'Forbidden' })
+    })
 })

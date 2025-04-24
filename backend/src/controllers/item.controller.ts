@@ -71,7 +71,7 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
         }
         const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
         const ownerId = decodedToken.id;
-        req.body.owner = ownerId;
+        req.body.owner_id = ownerId;
 
        const name = req.body.name;
        const existingItem = await findByName(name);
@@ -150,15 +150,31 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
 // update item
 const updateItem = async (req: Request, res: Response) => {
     try {
-        const validatedItem = itemUpdateRequestSchema.parse(req.body)
+        // check if the logged in user is the owner
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+        const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
+        if (!decodedToken.id || decodedToken.id === undefined) {}
+        const userId = decodedToken.id;
 
+
+        const validatedItem = itemUpdateRequestSchema.parse(req.body)
         const exist = await fetchItemById(validatedItem.id)
 
         if (!exist){
             res.status(400).json({ error: "Trying to update a non existing item" })
             return
         }
-        //console.log(validatedItem);
+
+        const itemOwner = exist.owner_id
+
+        if (itemOwner!== userId) {
+            res.status(403).json({ error: 'Forbidden' });
+            return;
+        }
 
         const data = await updateItemById(validatedItem)
         res.status(200).send(data)
