@@ -66,21 +66,24 @@ const AddItem = () =>{
     };
 
     return(
-        <form className="item-form" onSubmit={itemSubmitHandler}>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <Input id="name" ref={nameRef} type="text" label="Name"/>
-            <Input id="price" ref={priceRef} type="text" label="Price"/>
-            <Input id="description" ref={descriptionRef} type="text" label="Description"/>
-            <Input id="material" ref={materialRef} type="text" label="Material (optional)"/>
-            <Input id="size" ref={sizeRef} type="text" label="Size (optional)"/>
-            <Input id="color" ref={colorRef} type="text" label="Color (optional)"/>
-            <Input id="category" ref={categoryRef} type="text" label="Category (optional)"/>
-            <Input id="other" ref={otherRef} type="text" label="Other (optional)"/>
-            <Input id="image" ref={imageRef} type="text" label="Image (optional)"/>
-            <Button id="add-item" type="submit">
-                Add Item
-            </Button>
-        </form>
+        <>
+            <h2>Add Item</h2>
+            <form className="item-form" onSubmit={itemSubmitHandler}>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                <Input id="name" ref={nameRef} type="text" label="Name"/>
+                <Input id="price" ref={priceRef} type="text" label="Price"/>
+                <Input id="description" ref={descriptionRef} type="text" label="Description"/>
+                <Input id="material" ref={materialRef} type="text" label="Material (optional)"/>
+                <Input id="size" ref={sizeRef} type="text" label="Size (optional)"/>
+                <Input id="color" ref={colorRef} type="text" label="Color (optional)"/>
+                <Input id="category" ref={categoryRef} type="text" label="Category (optional)"/>
+                <Input id="other" ref={otherRef} type="text" label="Other (optional)"/>
+                <Input id="image" ref={imageRef} type="text" label="Image (optional)"/>
+                <Button id="add-item" type="submit">
+                    Add Item
+                </Button>
+            </form>
+        </>
     )
 }
 

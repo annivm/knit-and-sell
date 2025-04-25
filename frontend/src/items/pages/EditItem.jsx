@@ -122,29 +122,32 @@ const EditItem = () => {
     };
 
     return(
-        <form className="item-form" onSubmit={itemSubmitHandler}>
-            <div className="item__image">
-                <img src={`${import.meta.env.VITE_API_URL}/images/${data.image}`} alt={data.name}/>
-            </div>
-            <Input id="name" ref={nameRef} type="text" label="Name"/>
-            {inputErrors.name && <p className="error-message">{inputErrors.name}</p>}
-            <Input id="price" ref={priceRef} type="text" label="Price"/>
-            {inputErrors.price && <p className="error-message">{inputErrors.price}</p>}
-            <Input id="description" ref={descriptionRef} type="text" label="Description"/>
-            {inputErrors.description && <p className="error-message">{inputErrors.description}</p>}
-            <Input id="material" ref={materialRef} type="text" label="Material"/>
-            <Input id="size" ref={sizeRef} type="text" label="Size"/>
-            <Input id="color" ref={colorRef} type="text" label="Color"/>
-            <Input id="category" ref={categoryRef} type="text" label="Category"/>
-            <Input id="other" ref={otherRef} type="text" label="Other"/>
-            <Input id="image" ref={imageRef} type="text" label="Image"/>
-            <Button type="submit">
-                Update Item
-            </Button>
-            <Button inverse onClick={() => history.push("/")}>
-                Cancel
-            </Button>
-        </form>
+        <>
+            <h2>Edit Item</h2>
+            <form className="item-form" onSubmit={itemSubmitHandler}>
+                <div className="item__image">
+                    <img src={`${import.meta.env.VITE_API_URL}/images/${data.image}`} alt={data.name}/>
+                </div>
+                <Input id="name" ref={nameRef} type="text" label="Name"/>
+                {inputErrors.name && <p className="error-message">{inputErrors.name}</p>}
+                <Input id="price" ref={priceRef} type="text" label="Price"/>
+                {inputErrors.price && <p className="error-message">{inputErrors.price}</p>}
+                <Input id="description" ref={descriptionRef} type="text" label="Description"/>
+                {inputErrors.description && <p className="error-message">{inputErrors.description}</p>}
+                <Input id="material" ref={materialRef} type="text" label="Material"/>
+                <Input id="size" ref={sizeRef} type="text" label="Size"/>
+                <Input id="color" ref={colorRef} type="text" label="Color"/>
+                <Input id="category" ref={categoryRef} type="text" label="Category"/>
+                <Input id="other" ref={otherRef} type="text" label="Other"/>
+                <Input id="image" ref={imageRef} type="text" label="Image"/>
+                <Button type="submit">
+                    Update Item
+                </Button>
+                <Button inverse onClick={() => history.push("/")}>
+                    Cancel
+                </Button>
+            </form>
+        </>
     )
 }
 
