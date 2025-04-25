@@ -111,3 +111,43 @@ jobs:
               file: ./frontend/Dockerfile
               push: true
               tags: "${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}"
+
+    deploy:
+        name: Server Deployment
+        needs: build
+
+        runs-on: ubuntu-latest
+        steps:
+          - name: Fetch Code
+            uses: actions/checkout@v4
+
+          - name: Setup SSH
+            run: |
+                mkdir -p ~/.ssh
+                echo "${{ secrets.DEPLOY_KEY_PRIVATE }}" | base64 -d > ~/.ssh/id_rsa
+                chmod 600 ~/.ssh/id_rsa
+                ssh-keyscan -H ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
+
+          - name: Install rsync
+            run: sudo apt --assume-yes --no-install-recommends install rsync
+
+          - name: Rsync to EC2
+            run: |
+                mkdir -p market_project_stack
+                cp docker-compose.server.yml market_project_stack/docker-compose.yml
+                mkdir -p market_project_stack/db
+                cp db/init.prod.sql market_project_stack/db
+                echo "${{ secrets.ENV_FILE_PROD }}" > market_project_stack/.env
+                echo "BACKEND_IMAGE=${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}" >> market_project_stack/.env
+                echo "FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}" >> market_project_stack/.env
+                rsync -r market_project_stack "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }}:./"
+
+          - name: Start containers
+            run: |
+                ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }}
+                "
+                docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }};
+                cd market_project_stack;
+                docker compose pull;
+                docker compose up -d;
+                "
