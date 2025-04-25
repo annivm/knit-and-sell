@@ -10,6 +10,8 @@ afterEach( async () => {
 
 afterAll( async () => {
     await pool.query("DELETE FROM items WHERE name LIKE 'Test name' OR price LIKE 'Test Price' OR description LIKE 'Test desc'")
+    await pool.query('DELETE FROM users WHERE email = $1', ['john.doe@domain.com'])
+    await pool.query('DELETE FROM users WHERE email = $1', ['jane.doe@domain.com'])
     await pool.end()
 });
 
