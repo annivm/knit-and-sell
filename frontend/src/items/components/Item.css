@@ -81,18 +81,26 @@
 }
 
 
-  .item__modal-content {
-    padding: 0;
+.item__modal-content {
+  padding: 0;
+}
+.item__modal-actions {
+  text-align: right;
+}
+.item__actions button,
+.item__actions a {
+  margin: 0.5rem;
+}
+
+
+@media (min-width: 768px) {
+  .item__image {
+    height: 20rem;
   }
-  .item__modal-actions {
-    text-align: right;
+}
+
+@media (max-width: 768px) {
+  .item__details-table {
+    width: 100%;
   }
-  .item__actions button,
-  .item__actions a {
-    margin: 0.5rem;
-  }
-  @media (min-width: 768px) {
-    .item__image {
-      height: 20rem;
-    }
-  }
+}

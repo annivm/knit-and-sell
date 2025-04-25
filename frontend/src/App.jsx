@@ -28,7 +28,7 @@ function AppContent() {
 
   if(token) {
     routes =(
-        <Switch>
+      <Switch>
         <Route path="/" exact>
           <Items />
         </Route>

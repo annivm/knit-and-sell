@@ -12,6 +12,7 @@ const SideDrawer = props => {
         timeout={200}
         classNames="slide-in-left"
         mountOnEnter
+        unmountOnExit
         nodeRef={nodeRef}
         >
             <aside className="side-drawer" onClick={props.onClick}>{props.children}</aside>
