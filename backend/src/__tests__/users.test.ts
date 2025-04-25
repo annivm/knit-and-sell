@@ -11,7 +11,7 @@ afterEach( async () => {
 
 afterAll( async () => {
     await pool.query("DELETE FROM items WHERE name LIKE 'Test name' OR price LIKE 'Test Price' OR description LIKE 'Test desc'")
-    const result = await pool.query('DELETE FROM users WHERE email = $1', ['john.doe@domain.com'])
+    const result = await pool.query('DELETE FROM users WHERE email = $1', ['jd@domain.com'])
     await pool.query('DELETE FROM users WHERE email = $1', ['jane.doe@domain.com'])
     await pool.end()
     console.log('Deleted rows after each test:', result.rowCount);
@@ -23,7 +23,7 @@ describe('User signup and login', () => {
         const data = {
             id: '',
             name: 'John Doe',
-            email: 'john.doe@domain.com',
+            email: 'jd@domain.com',
             password: '12345',
             token: ''
         }
