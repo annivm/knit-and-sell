@@ -147,6 +147,6 @@ jobs:
                 ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} << EOF
                     docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
                     cd market_project_stack
-                    docker compose pull
-                    docker compose up -d
+                    docker-compose pull
+                    docker-compose up -d
                 EOF
