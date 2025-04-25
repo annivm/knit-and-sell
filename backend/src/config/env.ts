@@ -13,7 +13,7 @@ JWT_KEY: string;
 }
 
 export const config: Config = {
-    APP_PORT: Number(process.env.APP_PORT) || 5000,
+    APP_PORT: Number(process.env.APP_PORT) || 5002,
     DB_USER: process.env.DB_USER || 'postgres',
     DB_HOST: process.env.DB_HOST || 'db',
     DB_NAME: process.env.DB_NAME || 'market_db',
