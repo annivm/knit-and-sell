@@ -14,17 +14,19 @@ services:
     env_file:
       - .env
     restart: always
-  db:
-    image: postgres:17-alpine
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    ports:
-      - '5432:5432'
-    volumes:
-      - ./db/init.prod.sql:/docker-entrypoint-initdb.d/init.prod.sql
-      - pg_data:/var/lib/postgres/data/
+
+  # If using local database -> uncomment
+  # db:
+  #   image: postgres:17-alpine
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #     POSTGRES_DB: ${DB_NAME}
+  #   ports:
+  #     - '5432:5432'
+  #   volumes:
+  #     - ./db/init.prod.sql:/docker-entrypoint-initdb.d/init.prod.sql
+  #     - pg_data:/var/lib/postgres/data/
 
 volumes:
   pg_data:
