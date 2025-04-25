@@ -4,18 +4,21 @@ import app from "../app";
 
 afterEach( async () => {
     await pool.query("DELETE FROM items WHERE name LIKE 'Test name' OR price LIKE 'Test Price' OR description LIKE 'Test desc'")
-    await pool.query('DELETE FROM users WHERE email = $1', ['john.doe@domain.com'])
+    const result = await pool.query('DELETE FROM users WHERE email = $1', ['john.doe@domain.com'])
     await pool.query('DELETE FROM users WHERE email = $1', ['jane.doe@domain.com'])
+    console.log('Deleted rows after each test:', result.rowCount);
 });
 
 afterAll( async () => {
     await pool.query("DELETE FROM items WHERE name LIKE 'Test name' OR price LIKE 'Test Price' OR description LIKE 'Test desc'")
-    await pool.query('DELETE FROM users WHERE email = $1', ['john.doe@domain.com'])
+    const result = await pool.query('DELETE FROM users WHERE email = $1', ['john.doe@domain.com'])
     await pool.query('DELETE FROM users WHERE email = $1', ['jane.doe@domain.com'])
     await pool.end()
+    console.log('Deleted rows after each test:', result.rowCount);
 });
 
 describe('User signup and login', () => {
+    console.log('Connected to database:', process.env.DB_NAME);
     test('should create a new user', async () => {
         const data = {
             id: '',
