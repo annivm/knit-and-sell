@@ -126,7 +126,9 @@ jobs:
                 mkdir -p ~/.ssh
                 echo "${{ secrets.DEPLOY_KEY_PRIVATE }}" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
-                ssh-keyscan -H ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
+                ls -l ~/.ssh
+                cat ~/.ssh/id_rsa || echo "Failed to read private key"
+                ssh-keyscan -H ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts  || echo "Failed to scan remote server"
 
           - name: Install rsync
             run: sudo apt --assume-yes --no-install-recommends install rsync
