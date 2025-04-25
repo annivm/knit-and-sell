@@ -126,9 +126,7 @@ jobs:
                 mkdir -p ~/.ssh
                 echo "${{ secrets.DEPLOY_KEY_PRIVATE }}" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
-                ls -l ~/.ssh
-                cat ~/.ssh/id_rsa || echo "Failed to read private key"
-                ssh-keyscan -H ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts  || echo "Failed to scan remote server"
+                ssh-keyscan -H ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
 
           - name: Install rsync
             run: sudo apt --assume-yes --no-install-recommends install rsync
@@ -146,10 +144,9 @@ jobs:
 
           - name: Start containers
             run: |
-                ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }}
-                "
-                docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }};
-                cd market_project_stack;
-                docker compose pull;
-                docker compose up -d;
-                "
+                ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} << EOF
+                    docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+                    cd market_project_stack
+                    docker compose pull
+                    docker compose up -d
+                EOF
