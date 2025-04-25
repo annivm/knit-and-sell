@@ -1,0 +1,113 @@
+name: CI/CD
+
+on:
+    push:
+        branches: [ main ]
+
+env:
+    REGISTRY: ghcr.io
+    REPOSITORY: ${{github.repository}}
+    FRONTEND_IMAGE_NAME: 5g00ev16-3004/2025-final-project-annivm-frontend
+    BACKEND_IMAGE_NAME: 5g00ev16-3004/2025-final-project-annivm-backend
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+        - name: Fetch code
+          uses: actions/checkout@v4.2.2
+
+        - name: Install Node 20
+          uses: actions/setup-node@v4.1.0
+          with:
+                node-version: '20'
+
+        - name: Start PostgreSQL
+          run: |
+            sudo systemctl start postgresql
+            sudo systemctl enable postgresql
+
+        - name: Setup PostgreSQL
+          run: |
+            sudo -u postgres psql -c "SELECT version();"
+            sudo -u postgres psql -c "CREATE DATABASE test_db;"
+            sudo -u postgres psql -c "CREATE USER root WITH PASSWORD 'password';"
+            sudo -u postgres psql -c "ALTER ROLE root SUPERUSER;"
+            sudo -u postgres psql -c "\l"
+
+        - name: Seed Database
+          working-directory: ./db
+          run: PGPASSWORD=password psql -h localhost -U root -d test_db -f init.sql
+
+        - name: Create backend testing env file
+          run: |
+            echo '${{ secrets.ENV_FILE_TEST }}' > ./backend/.env
+
+        - name: Install the backend dependencies
+          working-directory: ./backend
+          run: npm install
+
+        - name: Build backend code
+          working-directory: ./backend
+          run: npm run build
+
+        - name: Typecheck the backend
+          working-directory: ./backend
+          run: npm run typecheck
+
+        - name: Run the backend tests
+          working-directory: ./backend
+          run: npm run test
+
+        - name: Install the frontend dependencies
+          working-directory: ./frontend
+          run: npm install
+
+        - name: Build frontend code
+          working-directory: ./frontend
+          run: npm run build
+
+    build:
+        name: Build Container Images
+        runs-on: ubuntu-latest
+        needs: test
+        permissions:
+          contents: read
+          packages: write
+        steps:
+          - name: Fetch Code
+            uses: actions/checkout@v4
+
+          - name: set up QEMU
+            uses: docker/setup-qemu-action@v3.3.0
+
+          - name: set up docker buildx
+            uses: docker/setup-buildx-action@v3
+
+          - name: docker login
+            uses: docker/login-action@v3.3.0
+            with:
+              registry: ${{ env.REGISTRY }}
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: build and push backend image
+            uses: docker/build-push-action@v5.0.0
+            with:
+              context: ./backend
+              file: ./backend/Dockerfile
+              push: true
+              tags: '${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}'
+
+          - name: Copy production env file to frontend folder
+            working-directory: ./frontend
+            run: echo '${{ secrets.ENV_FILE_PROD }}' > .env
+
+          - name: build and push frontend image
+            uses: docker/build-push-action@v5.0.0
+            with:
+              context: ./frontend
+              file: ./frontend/Dockerfile
+              push: true
+              tags: "${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}"
