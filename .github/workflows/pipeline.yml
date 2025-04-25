@@ -140,8 +140,8 @@ jobs:
                 echo "FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}" >> market_project_stack/.env
                 rsync -r market_project_stack "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }}:./"
 
-                - name: Start containers
-                run: |
+          - name: Start containers
+            run: |
                 ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} << EOF
                 docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
                 cd market_project_stack
