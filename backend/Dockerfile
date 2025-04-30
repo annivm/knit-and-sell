@@ -15,5 +15,5 @@ COPY --from=builder /app/package*.json ./
 RUN npm install --omit=dev
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
-EXPOSE 5000
+EXPOSE 5002
 CMD ["npm", "run", "start"]

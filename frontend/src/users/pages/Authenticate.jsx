@@ -18,17 +18,22 @@ const Authenticate = () => {
 
     const { login } = useAuthContext();
 
+    const [errorMessage, setErrorMessage] = useState("");
+
     const switchModeHandler = () => {
         setLoginMode(prevMode => !prevMode);
+        setErrorMessage("")
     }
 
     const signUpUserMutation = useMutation({
         mutationFn: signUpUser,
         onSuccess: (data) => {
             login(data.id, data.token)
+            setErrorMessage("");
         },
         onError: (error) => {
             console.error(error);
+            setErrorMessage(error.response?.data?.error || "Failed to sign up. Please try again.");
         }
     })
 
@@ -36,15 +41,26 @@ const Authenticate = () => {
         mutationFn: loginUser,
         onSuccess: (data) => {
             login(data.id, data.token)
+            setErrorMessage("");
         },
         onError: (error) => {
-            console.log(error);
+            // console.log(error);
+            setErrorMessage("Failed to login. " + error);
         }
     })
 
     const onSubmitHandler = event => {
         event.preventDefault();
+        setErrorMessage("");
 
+        if(isLoginMode && (!emailRef.current.value || !passwordRef.current.value)) {
+            setErrorMessage("Email and Password are required fields.");
+            return;
+        }
+        if (!isLoginMode && (!nameRef.current.value || !emailRef.current.value || !passwordRef.current.value)) {
+            setErrorMessage("Name, Email, and Password are required fields.");
+            return;
+        }
         if (isLoginMode) {
             loginUserMutation.mutate({
                 email: emailRef.current.value,
@@ -68,6 +84,7 @@ const Authenticate = () => {
             }
         </h2>
         <form onSubmit={onSubmitHandler}>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             {
                 !isLoginMode &&
                 <Input id="name" ref={nameRef} type="text" label="Name" />

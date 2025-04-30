@@ -84,7 +84,24 @@ const signUpUser = async (req: Request, res: Response) => {
 }
 
 const loginUser = async (req: Request, res: Response) => {
-    const validUserLoginData = loginUserRequestSchema.parse(req.body);
+    let validUserLoginData;
+    try{
+        validUserLoginData = loginUserRequestSchema.parse(req.body);
+    } catch (error) {
+        if (error instanceof ZodError) {
+            const errorMessages = error.errors.map(err => err.message);
+            res.status(400).json({ error: errorMessages.join(", ") });
+            return;
+        }
+        if (error instanceof Error) {
+            if ('errors' in error) {
+                res.status(500).json({ error: "Missing a value" });
+                return;
+            }
+        }
+        return;
+    }
+
 
     let identifiedUser;
     try {

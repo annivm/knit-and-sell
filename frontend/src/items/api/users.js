@@ -34,5 +34,12 @@ export const loginUser = async ({email, password}) => {
       })
     }
   );
-  return await res.json();
+
+  const data = await res.json();
+  if (!res.ok) {
+    const error = res.statusText
+    throw error
+  }
+  return data;
+
 }

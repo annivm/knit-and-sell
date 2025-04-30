@@ -27,7 +27,7 @@ export type UserCreateRequest = z.infer<typeof signUpUserSchema>;
 export const loginUserRequestSchema = z.object(
     {
         email: z.string().email("Must be a valid email"),
-        password: z.string()
+        password: z.string().min(1, "Password must be at least 1 character")
     }
 )
 export type LoginUserRequest = z.infer<typeof loginUserRequestSchema>;
