@@ -19,7 +19,7 @@ Installation (Git Bash):
     npm install
 
     Create .env -file in the backend folder
-        APP_PORT=5000
+        PORT=5000
         DB_USER=postgres
         DB_HOST=localhost
         DB_NAME=market_db

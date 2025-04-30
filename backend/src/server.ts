@@ -3,8 +3,8 @@ import { config } from "./config/env";
 
 
 
-app.listen(config.APP_PORT, (): void => {
-    console.log(`Server runnin on port: ${config.APP_PORT}`);
+app.listen(config.PORT, (): void => {
+    console.log(`Server runnin on port: ${config.PORT}`);
 
 });
 
