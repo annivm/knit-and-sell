@@ -69,15 +69,16 @@ const signUpUser = async (req: Request, res: Response) => {
             res.status(500).json({ message: "SignUp failed" });
         }
     } catch (error) {
+        if (error instanceof ZodError) {
+            console.log(error.errors)
+            res.status(400).json({ message: error.issues[0].message });
+            return;
+        }
         if (error instanceof Error) {
             if ('errors' in error) {
                 res.status(400).json({ message: "Missing a value" });
                 return;
             }
-        }
-        if (error instanceof ZodError) {
-            res.status(400).json({ message: "Could not create user, please try again." });
-            return;
         }
         return;
     }
