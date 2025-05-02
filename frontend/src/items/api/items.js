@@ -23,26 +23,28 @@ export const getMyItems = async ({token}) => {
 
 export const createItem = async ({name, price, description, material, size, color, category, other, image, token}) => {
     // console.log(name, price, description, material, size, color, category, other, image, userId);
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("material", material);
+    formData.append("size", size);
+    formData.append("color", color);
+    formData.append("category", category);
+    formData.append("other", other);
+    formData.append("image", image);
+
     const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/items`,
         {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-type': 'application/json',
+                //'Content-type': 'application/json',
                 Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({
-                name,
-                price,
-                description,
-                material,
-                size,
-                color,
-                category,
-                other,
-                image
-            })
+            body: formData
         }
     );
     const data = await res.json();
@@ -66,38 +68,40 @@ export const getItemById = async ({itemId}) => {
 }
 
 export const updateItem = async ({itemId, name, price, description, material, size, color, category, other, image, token}) => {
- const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/items`,
-    {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify({
-        id: itemId,
-        name,
-        price,
-        description,
-        material,
-        size,
-        color,
-        category,
-        other,
-        image
-      })
+
+  const formData = new FormData();
+
+    formData.append("id", itemId);
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("material", material);
+    formData.append("size", size);
+    formData.append("color", color);
+    formData.append("category", category);
+    formData.append("other", other);
+    formData.append("image", image);
+
+    const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/items`,
+        {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                //'Content-type': 'application/json',
+                Authorization: 'Bearer ' + token
+            },
+            body: formData
+        }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      const error = new Error(data.message || 'Request failed');
+      error.response = data;
+      throw error;
     }
-  );
 
-  const data = await res.json();
-  if (!res.ok) {
-    const error = new Error(data.message || 'Request failed');
-    error.response = data;
-    throw error;
-  }
-
-  return data;
+    return data;
 }
 
 export const deleteItem = async ({itemId, token}) => {

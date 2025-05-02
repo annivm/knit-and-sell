@@ -10,6 +10,7 @@ DB_NAME: string;
 DB_PASSWORD: string;
 DB_PORT: number;
 JWT_KEY: string;
+FRONTEND_URL: string;
 }
 
 export const config: Config = {
@@ -19,5 +20,6 @@ export const config: Config = {
     DB_NAME: process.env.DB_NAME || 'market_db',
     DB_PASSWORD: process.env.DB_PASSWORD || 'market_password',
     DB_PORT: Number(process.env.DB_PORT) || 5432,
-    JWT_KEY: process.env.JWT_KEY || 'my_secret_jwt_key'
+    JWT_KEY: process.env.JWT_KEY || 'my_secret_jwt_key',
+    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
 };

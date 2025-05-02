@@ -9,6 +9,17 @@
   border-radius: 6px;
   background: white;
 }
+.image__upload {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem
+}
+
+.item-form__actions {
+  margin: 0 auto;
+}
 
 .error-message {
   color: red;
@@ -16,4 +27,13 @@
   font-weight: bold;
   margin-bottom: 1rem;
   text-align: center;
+}
+
+@media (max-width: 395px) {
+  .image__upload {
+    flex-direction: column;
+  }
+  .item-form__actions .button--inverse {
+    margin-top: 0.5rem;
+  }
 }

@@ -16,6 +16,7 @@ const AddItem = () =>{
 
     const [errorMessage, setErrorMessage] = useState("");
     const [inputErrors, setInputErrors] = useState({});
+    const [imageFile, setImageFile] = useState(null);
 
     const nameRef = useRef();
     const priceRef = useRef();
@@ -25,12 +26,11 @@ const AddItem = () =>{
     const colorRef = useRef();
     const categoryRef = useRef();
     const otherRef = useRef();
-    const imageRef = useRef();
+    //const imageRef = useRef();
 
     const createItemMutation = useMutation({
         mutationFn: createItem,
-        onSuccess: (response) => {
-            console.log(response);
+        onSuccess: () => {
             queryClient.invalidateQueries("itemData");
             setErrorMessage("");
             history.push('/');
@@ -51,6 +51,16 @@ const AddItem = () =>{
         }
     });
 
+    const handleImageChange = (event) => {
+        const file = event.target.files[0]
+        // console.log(file)
+        if (file) {
+            setImageFile(file)
+        } else {
+            setImageFile(null)
+        }
+    }
+
     const itemSubmitHandler = async event => {
         event.preventDefault();
         setErrorMessage("");
@@ -69,7 +79,7 @@ const AddItem = () =>{
             color: colorRef.current?.value || "",
             category: categoryRef.current?.value || "",
             other: otherRef.current?.value || "",
-            image: imageRef.current.value || "default.png",
+            image: imageFile,
             token: token,
             userId: userId
         })
@@ -96,8 +106,11 @@ const AddItem = () =>{
                 <Input id="category" ref={categoryRef} type="text" label="Category (optional)"/>
                 <Input id="other" ref={otherRef} type="text" label="Other (optional)"/>
 
-                <Input id="image" ref={imageRef} type="text" label="Image (optional)"/>
-                {inputErrors.image && <p className="error-message">{inputErrors.image}</p>}
+                <div>
+                    {imageFile && <p>{imageFile?.name}</p>}
+                    <label htmlFor="file" className="button button--inverse" >+ Upload Image</label>
+                    <input id="file" type="file" accept="image/*" onChange={handleImageChange}/>
+                </div>
 
                 <Button id="add-item" type="submit">
                     Add Item

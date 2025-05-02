@@ -3,6 +3,7 @@ import { deleteItemById, fetchItemById, fetchItems, fetchItemsByOwner, findByNam
 import { itemByIdRequestSchema, itemCreateRequestSchema, itemUpdateRequestSchema } from "../models/items.model";
 import { ZodError } from "zod";
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
 import { config } from "../config/env";
 
 
@@ -81,9 +82,13 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
             return
         }
 
+        // add image to the request body
+        const image = req.file?.filename || "default.png";
+        req.body.image = image;
+
         const validatedItem = itemCreateRequestSchema.parse(req.body);
         const data = await insertItem(validatedItem)
-        //console.log(validatedItem);
+        // console.log(validatedItem);
 
         res.status(201).send(data);
 
@@ -134,7 +139,19 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const data = await deleteItemById(validatedId)
+        // delete item image
+        const imagePath = `uploads/images/${item.image}`;
+        if( fs.existsSync(imagePath)) {
+            fs.unlink(imagePath, (err: any) => {
+                if (err) {
+                    console.error('Error deleting image:', err);
+                } else {
+                    console.log('Image deleted successfully');
+                }
+            });
+        }
+
+        await deleteItemById(validatedId)
 
         res.status(200).json({ message: "Item deleted successfully" });
     } catch (error) {
@@ -162,7 +179,9 @@ const updateItem = async (req: Request, res: Response) => {
         if (!decodedToken.id || decodedToken.id === undefined) {}
         const userId = decodedToken.id;
 
-
+        // add image to the request body
+        const image = req.file?.filename || "default.png";
+        req.body.image = image;
         const validatedItem = itemUpdateRequestSchema.parse(req.body)
         const exist = await fetchItemById(validatedItem.id)
 

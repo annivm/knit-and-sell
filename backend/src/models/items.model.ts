@@ -42,7 +42,7 @@ export const itemByIdRequestSchema = z.coerce.number().int().positive()
 
 export const itemUpdateRequestSchema = z.object(
     {
-        id: z.number().positive(),
+        id: z.coerce.number().positive(),
         name: z.string().min(2, "Name must be at least 2 character."),
         price: z.string().min(1, "Price must be at least 1 character."),
         description: z.string().min(4, "Description must be at least 4 character."),

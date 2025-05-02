@@ -29,6 +29,7 @@ const EditItem = () => {
 
     const { id: itemId } = useParams();
     const [inputErrors, setInputErrors] = useState({});
+    const [imageFile, setImageFile] = useState(null);
 
     const { data, isLoading, isError } = useQuery(
         {
@@ -59,7 +60,7 @@ const EditItem = () => {
             history.push("/");
         },
         onError: (error) => {
-            // console.error(error.response?.error);
+            console.error(error.response?.error);
             if (error.response?.error) {
                 // Get all errors from the inputs
                 const errors = {};
@@ -89,6 +90,17 @@ const EditItem = () => {
         )
     }
 
+    const handleImageChange = (event) => {
+        const file = event.target.files[0]
+        // console.log(file)
+        if (file) {
+            setImageFile(file)
+            imageRef.current.value = file.name;
+        } else {
+            setImageFile(null)
+        }
+    }
+
     const itemSubmitHandler = async event => {
         event.preventDefault();
         setInputErrors({});
@@ -113,7 +125,7 @@ const EditItem = () => {
             color: colorRef.current?.value || "",
             category: categoryRef.current?.value || "",
             other: otherRef.current?.value || "",
-            image: imageRef.current.value || "default.png",
+            image: imageFile,
             token: token,
             userId: userId
         };
@@ -142,17 +154,22 @@ const EditItem = () => {
                 <Input id="color" ref={colorRef} type="text" label="Color"/>
                 <Input id="category" ref={categoryRef} type="text" label="Category"/>
                 <Input id="other" ref={otherRef} type="text" label="Other"/>
+                <Input id="image" label="Image" readOnly ref={imageRef}/>
+                <div className="image__upload">
+                    {imageFile && <p>{imageFile?.name}</p>}
+                    <label htmlFor="file" className="button button--inverse" >+ Upload Image</label>
+                </div>
+                    <input id="file" type="file" accept="image/*" onChange={handleImageChange}/>
 
-                <Input id="image" ref={imageRef} type="text" label="Image"/>
-                {inputErrors.image && <p className="error-message">{inputErrors.image}</p>}
-
-                {inputErrors.general && <p className="error-message">{inputErrors.general}</p>}
-                <Button type="submit">
-                    Update Item
-                </Button>
-                <Button inverse onClick={() => history.push("/")}>
-                    Cancel
-                </Button>
+                <div className="item-form__actions">
+                    {inputErrors.general && <p className="error-message">{inputErrors.general}</p>}
+                    <Button type="submit">
+                        Update Item
+                    </Button>
+                    <Button inverse onClick={() => history.push("/")}>
+                        Cancel
+                    </Button>
+                </div>
             </form>
         </>
     )
