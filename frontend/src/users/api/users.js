@@ -1,21 +1,26 @@
 export const signUpUser = async ({name, email, password}) => {
-    const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/users/signup`,
-        {
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name,
-                email,
-                password
-            })
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/users/signup`,
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        },
+      body: JSON.stringify({
+        name,
+        email,
+        password
+      })
 
-        }
-    )
-    return await res.json();
+    }
+  )
+  const data = await res.json();
+  if (!res.ok) {
+    const error = data.message || '';
+    throw error
+  }
+  return data;
 }
 
 export const loginUser = async ({email, password}) => {
@@ -37,7 +42,7 @@ export const loginUser = async ({email, password}) => {
 
   const data = await res.json();
   if (!res.ok) {
-    const error = res.statusText
+    const error = data.message || '';
     throw error
   }
   return data;
