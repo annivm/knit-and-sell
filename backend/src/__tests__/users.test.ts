@@ -54,7 +54,7 @@ describe('User signup and login', () => {
             .send(data);
 
         expect(response.status).toEqual(400);
-        expect(response.body).toEqual({ error: 'Missing a value' });
+        expect(response.body).toEqual({ message: 'Must be a valid email.' });
     })
 
     test('should not create a user with duplicate email', async () => {
@@ -77,7 +77,7 @@ describe('User signup and login', () => {
             .send(data);
 
         expect(response.status).toEqual(422);
-        expect(response.body).toEqual({ error: 'User already exists' });
+        expect(response.body).toEqual({ message: 'User already exists' });
     });
 
     test('should login a user', async () => {
@@ -131,7 +131,7 @@ describe('User signup and login', () => {
             .send(loginData)
 
         expect(response.status).toEqual(401)
-        expect(response.body).toEqual({ message: 'Could not identify user, credentials seem to be wrong' });
+        expect(response.body).toEqual({ message: 'Could not identify user, credentials seem to be wrong.' });
     })
 
     test('should not login a user with wrong email', async () => {
@@ -158,7 +158,7 @@ describe('User signup and login', () => {
             .send(loginData)
 
         expect(response.status).toEqual(401)
-        expect(response.body).toEqual({ message: 'Could not identify user, credentials seem to be wrong' });
+        expect(response.body).toEqual({ message: 'Could not identify user, credentials seem to be wrong.' });
     })
 })
 

@@ -141,7 +141,7 @@ describe('POST item endpoint', () => {
         .set('Authorization', 'Bearer ' + loggedInUser.token)
         .send(item);
         expect(response.status).toEqual(400);
-        expect(response.text).toContain('Item exist');
+        expect(response.body.message).toContain('Item already exist');
     });
 
     test('should not allow no name property', async () =>{
@@ -155,7 +155,7 @@ describe('POST item endpoint', () => {
             .set('Authorization', 'Bearer ' + loggedInUser.token)
             .send(item)
         expect(response.status).toEqual(400);
-        expect(response.body.error).toContain('Required');
+        expect(response.body.error.some((e: any) => e.message.includes('Required'))).toBeTruthy();
     })
 
     test('should not allow no price property', async () =>{
@@ -169,7 +169,7 @@ describe('POST item endpoint', () => {
             .set('Authorization', 'Bearer ' + loggedInUser.token)
             .send(item)
         expect(response.status).toEqual(400);
-        expect(response.body.error).toContain('Required');
+        expect(response.body.error.some((e: any) => e.message.includes('Required'))).toBeTruthy();
     })
 
     test('should not allow no description property', async () =>{
@@ -183,7 +183,7 @@ describe('POST item endpoint', () => {
             .set('Authorization', 'Bearer ' + loggedInUser.token)
             .send(item)
         expect(response.status).toEqual(400);
-        expect(response.body.error).toContain('Required');
+        expect(response.body.error.some((e: any) => e.message.includes('Required'))).toBeTruthy();
     })
 
     test('should not allow empty name property', async () =>{
@@ -198,7 +198,7 @@ describe('POST item endpoint', () => {
             .set('Authorization', 'Bearer ' + loggedInUser.token)
             .send(item)
         expect(response.status).toEqual(400);
-        expect(response.body.error).toContain('Name must be at least 2 character');
+        expect(response.body.error.some((e: any) => e.message.includes('Name must be at least 2 character'))).toBeTruthy();
     })
 
     test('should not allow empty price property', async () =>{
@@ -213,7 +213,7 @@ describe('POST item endpoint', () => {
             .set('Authorization', 'Bearer ' + loggedInUser.token)
             .send(item)
         expect(response.status).toEqual(400);
-        expect(response.body.error).toContain('Price must be at least 1 character');
+        expect(response.body.error.some((e: any) => e.message.includes('Price must be at least 1 character'))).toBeTruthy();
     })
 
     test('should not allow empty description property', async () =>{
@@ -228,7 +228,7 @@ describe('POST item endpoint', () => {
             .set('Authorization', 'Bearer ' + loggedInUser.token)
             .send(item)
         expect(response.status).toEqual(400);
-        expect(response.body.error).toContain('Description must be at least 4 character');
+        expect(response.body.error.some((e: any) => e.message.includes('Description must be at least 4 character'))).toBeTruthy();
     })
 
 
@@ -244,7 +244,7 @@ describe('POST item endpoint', () => {
         .set('Authorization', 'Bearer ' + loggedInUser.token)
         .send(item);
         expect(response.status).toEqual(400);
-        expect(response.text).toContain('Name must be at least 2 character');
+        expect(response.body.error.some((e: any) => e.message.includes('Name must be at least 2 character'))).toBeTruthy();
     });
 
     test('should not allow too short price', async () => {
@@ -259,7 +259,7 @@ describe('POST item endpoint', () => {
         .set('Authorization', 'Bearer ' + loggedInUser.token)
         .send(item);
         expect(response.status).toEqual(400);
-        expect(response.text).toContain('Price must be at least 1 character');
+        expect(response.body.error.some((e: any) => e.message.includes('Price must be at least 1 character'))).toBeTruthy();
     });
 
     test('should not allow too short desc', async () => {
@@ -274,7 +274,7 @@ describe('POST item endpoint', () => {
         .set('Authorization', 'Bearer ' + loggedInUser.token)
         .send(item);
         expect(response.status).toEqual(400);
-        expect(response.text).toContain('Description must be at least 4 character');
+        expect(response.body.error.some((e: any) => e.message.includes('Description must be at least 4 character'))).toBeTruthy();
     });
 })
 
@@ -313,7 +313,7 @@ describe('DELETE item endpoint', () => {
             .set('Authorization', 'Bearer ' + loggedInUser.token)
 
         expect(response.status).toEqual(404)
-        expect(response.body).toEqual({ error: "Item not found" })
+        expect(response.body).toEqual({ message: "Item not found" })
     });
 
     test('should not allow delete without authentication', async() => {
@@ -330,7 +330,7 @@ describe('DELETE item endpoint', () => {
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + loggedInUser.token);
         expect(response.status).toEqual(403);
-        expect(response.body).toEqual({ error: 'Forbidden' });
+        expect(response.body).toEqual({ message: 'Forbidden' });
     });
 
 })
