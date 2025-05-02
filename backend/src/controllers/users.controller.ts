@@ -91,7 +91,7 @@ const loginUser = async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof ZodError) {
             console.log("Error:")
-            res.status(400).json({ message: "Could not identify user, credentials seem to be wrong." });
+            res.status(400).json({ message: error.issues[0].message });
             return;
         }
         if (error instanceof Error) {
