@@ -6,7 +6,7 @@ import Card from '../../shared/components/Card/Card';
 import Input from '../../shared/components/Input/Input';
 import Button from '../../shared/components/Button/Button';
 import { useMutation } from '@tanstack/react-query';
-import { loginUser, signUpUser } from '../../items/api/users';
+import { loginUser, signUpUser } from '../api/users';
 import { useAuthContext } from '../../shared/context/auth-context';
 
 const Authenticate = () => {
@@ -32,8 +32,8 @@ const Authenticate = () => {
             setErrorMessage("");
         },
         onError: (error) => {
-            console.error(error);
-            setErrorMessage(error.response?.data?.error || "Failed to sign up. Please try again.");
+            //console.error(error);
+            setErrorMessage("Failed to signup. " + error);
         }
     })
 
