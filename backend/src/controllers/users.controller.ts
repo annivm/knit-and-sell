@@ -6,6 +6,7 @@ import { loginUserRequestSchema, signUpUserSchema, UserCreateRequest } from "../
 import { config } from "../config/env";
 import { createUser, findByEmail } from '../services/users.service';
 import { ZodError } from "zod";
+import { console } from "inspector";
 
 
 const signUpUser = async (req: Request, res: Response) => {
@@ -14,7 +15,7 @@ const signUpUser = async (req: Request, res: Response) => {
 
         const exist = await findByEmail(validUserSignUpData.email);
         if (exist) {
-            res.status(422).json({ error: "User already exists" })
+            res.status(422).json({ message: "User already exists" })
             return;
         }
 
@@ -70,13 +71,12 @@ const signUpUser = async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof Error) {
             if ('errors' in error) {
-                res.status(400).json({ error: "Missing a value" });
+                res.status(400).json({ message: "Missing a value" });
                 return;
             }
         }
         if (error instanceof ZodError) {
-            const errorMessages = error.errors.map(err => err.message);
-            res.status(400).json({ error: errorMessages.join(", ") });
+            res.status(400).json({ message: "Could not create user, please try again." });
             return;
         }
         return;
@@ -89,13 +89,13 @@ const loginUser = async (req: Request, res: Response) => {
         validUserLoginData = loginUserRequestSchema.parse(req.body);
     } catch (error) {
         if (error instanceof ZodError) {
-            const errorMessages = error.errors.map(err => err.message);
-            res.status(400).json({ error: errorMessages.join(", ") });
+            console.log("Error:")
+            res.status(400).json({ message: "Could not identify user, credentials seem to be wrong." });
             return;
         }
         if (error instanceof Error) {
             if ('errors' in error) {
-                res.status(500).json({ error: "Missing a value" });
+                res.status(500).json({ message: "Missing a value" });
                 return;
             }
         }
@@ -108,14 +108,14 @@ const loginUser = async (req: Request, res: Response) => {
         const data = await findByEmail(validUserLoginData.email);
         //console.log(data);
         if (!data){
-            res.status(401).json({ message: 'Could not identify user, credentials seem to be wrong'});
+            res.status(401).json({ message: 'Could not identify user, credentials seem to be wrong.'});
             return;
         }
         identifiedUser = data;
         //console.log(identifiedUser.password);
 
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         res.status(500).json({ message: "Login failed" });
         return;
     }
@@ -126,13 +126,13 @@ const loginUser = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message:'Could not log you in, please check your credentials and try again'});
+        //console.log(error);
+        res.status(500).json({ message:'Could not log you in, please check your credentials and try again.'});
         return;
     }
 
     if (!isValidPassword){
-        res.status(401).json({ message: 'Could not identify user, credentials seem to be wrong'});
+        res.status(401).json({ message: 'Could not identify user, credentials seem to be wrong.'});
         return;
     }
 
@@ -150,7 +150,7 @@ const loginUser = async (req: Request, res: Response) => {
         //console.log(token);
 
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         res.status(500).json({ message: 'Something went wrong with the login, please try again' });
         return;
     }
