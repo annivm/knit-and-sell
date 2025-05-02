@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap');
 
 .main-navigation__menu-btn {
     width: 3rem;
@@ -20,11 +21,14 @@
 
 .main-navigation__title {
   color: white;
+  font-family: "Rubik Bubbles", system-ui;
 }
 
 .main-navigation__title a {
   text-decoration: none;
-  color: white;
+  color: #d77a61;
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.7);
+  -webkit-text-stroke: 1.5px #472b2342;
 }
 
 .main-navigation__header-nav {
