@@ -59,11 +59,11 @@ const EditItem = () => {
             history.push("/");
         },
         onError: (error) => {
-            console.error(error);
-            if (error.response?.data?.errors) {
+            // console.error(error.response?.error);
+            if (error.response?.error) {
                 // Get all errors from the inputs
                 const errors = {};
-                error.response.data.errors.forEach((err) => {
+                error.response.error.forEach((err) => {
                     errors[err.field] = err.message;
                 });
                 setInputErrors(errors);
@@ -130,16 +130,23 @@ const EditItem = () => {
                 </div>
                 <Input id="name" ref={nameRef} type="text" label="Name"/>
                 {inputErrors.name && <p className="error-message">{inputErrors.name}</p>}
+
                 <Input id="price" ref={priceRef} type="text" label="Price"/>
                 {inputErrors.price && <p className="error-message">{inputErrors.price}</p>}
+
                 <Input id="description" ref={descriptionRef} type="text" label="Description"/>
                 {inputErrors.description && <p className="error-message">{inputErrors.description}</p>}
+
                 <Input id="material" ref={materialRef} type="text" label="Material"/>
                 <Input id="size" ref={sizeRef} type="text" label="Size"/>
                 <Input id="color" ref={colorRef} type="text" label="Color"/>
                 <Input id="category" ref={categoryRef} type="text" label="Category"/>
                 <Input id="other" ref={otherRef} type="text" label="Other"/>
+
                 <Input id="image" ref={imageRef} type="text" label="Image"/>
+                {inputErrors.image && <p className="error-message">{inputErrors.image}</p>}
+
+                {inputErrors.general && <p className="error-message">{inputErrors.general}</p>}
                 <Button type="submit">
                     Update Item
                 </Button>
