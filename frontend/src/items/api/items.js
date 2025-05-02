@@ -21,8 +21,8 @@ export const getMyItems = async ({token}) => {
   return await res.json();
 }
 
-export const createItem = async ({name, price, description, material, size, color, category, other, image, token, userId}) => {
-    console.log(name, price, description, material, size, color, category, other, image, userId);
+export const createItem = async ({name, price, description, material, size, color, category, other, image, token}) => {
+    // console.log(name, price, description, material, size, color, category, other, image, userId);
     const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/items`,
         {
@@ -45,7 +45,14 @@ export const createItem = async ({name, price, description, material, size, colo
             })
         }
     );
-    return await res.json();
+    const data = await res.json();
+    if (!res.ok) {
+      const error = new Error(data.message || 'Request failed');
+      error.response = data;
+      throw error;
+    }
+
+    return data;
 }
 
 export const getItemById = async ({itemId}) => {
@@ -83,11 +90,14 @@ export const updateItem = async ({itemId, name, price, description, material, si
     }
   );
 
+  const data = await res.json();
   if (!res.ok) {
-    throw new Error("Failed to update item");
+    const error = new Error(data.message || 'Request failed');
+    error.response = data;
+    throw error;
   }
 
-  return await res.json();
+  return data;
 }
 
 export const deleteItem = async ({itemId, token}) => {

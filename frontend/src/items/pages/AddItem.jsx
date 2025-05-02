@@ -15,6 +15,7 @@ const AddItem = () =>{
     const history = useHistory();
 
     const [errorMessage, setErrorMessage] = useState("");
+    const [inputErrors, setInputErrors] = useState({});
 
     const nameRef = useRef();
     const priceRef = useRef();
@@ -35,8 +36,18 @@ const AddItem = () =>{
             history.push('/');
         },
         onError: (error) => {
-            console.error(error);
-            setErrorMessage(error.response?.data?.error || "Failed to add item. Please try again.");
+            // console.error(error.response?.error);
+            if (error.response?.error) {
+                // Get all errors from the inputs
+                const errors = {};
+                error.response.error.forEach((err) => {
+                    errors[err.field] = err.message;
+                });
+                setInputErrors(errors);
+            } else {
+                setInputErrors({ general: "Failed to add item. Please try again." });
+            }
+
         }
     });
 
@@ -71,14 +82,23 @@ const AddItem = () =>{
             <form className="item-form" onSubmit={itemSubmitHandler}>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <Input id="name" ref={nameRef} type="text" label="Name"/>
+                {inputErrors.name && <p className="error-message">{inputErrors.name}</p>}
+
                 <Input id="price" ref={priceRef} type="text" label="Price"/>
+                {inputErrors.price && <p className="error-message">{inputErrors.price}</p>}
+
                 <Input id="description" ref={descriptionRef} type="text" label="Description"/>
+                {inputErrors.description && <p className="error-message">{inputErrors.description}</p>}
+
                 <Input id="material" ref={materialRef} type="text" label="Material (optional)"/>
                 <Input id="size" ref={sizeRef} type="text" label="Size (optional)"/>
                 <Input id="color" ref={colorRef} type="text" label="Color (optional)"/>
                 <Input id="category" ref={categoryRef} type="text" label="Category (optional)"/>
                 <Input id="other" ref={otherRef} type="text" label="Other (optional)"/>
+
                 <Input id="image" ref={imageRef} type="text" label="Image (optional)"/>
+                {inputErrors.image && <p className="error-message">{inputErrors.image}</p>}
+
                 <Button id="add-item" type="submit">
                     Add Item
                 </Button>
