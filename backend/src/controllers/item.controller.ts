@@ -3,8 +3,9 @@ import { deleteItemById, fetchItemById, fetchItems, fetchItemsByOwner, findByNam
 import { itemByIdRequestSchema, itemCreateRequestSchema, itemUpdateRequestSchema } from "../models/items.model";
 import { ZodError } from "zod";
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
 import { config } from "../config/env";
+import cloudinary from 'cloudinary';
+import { storage } from "../config/cloudinary";
 
 
 const getItems = async (req: Request, res:Response): Promise<void> =>{
@@ -83,9 +84,13 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
         }
 
         // add image to the request body
-        const image = req.file?.filename || "default.png";
+        const image = req.file?.path || "default.png";
+        const image_id = req.file?.filename
+        // console.log(req.file)
         req.body.image = image;
+        req.body.image_id = image_id
 
+        //const image_id = req.file?.public_id
         const validatedItem = itemCreateRequestSchema.parse(req.body);
         const data = await insertItem(validatedItem)
         // console.log(validatedItem);
@@ -139,15 +144,15 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // delete item image
-        const imagePath = `uploads/images/${item.image}`;
-        if( fs.existsSync(imagePath)) {
-            fs.unlink(imagePath, (err: any) => {
-                if (err) {
-                    console.error('Error deleting image:', err);
-                } else {
-                    console.log('Image deleted successfully');
+        // Delete the image from Cloudinary
+        if (item.image_id && item.image !== "default.png") {
+                const publicId = item.image_id
+            await cloudinary.v2.uploader.destroy(publicId, function(error, result) {
+                if (error) {
+                    console.log("Error deleting image from Cloudinary:", error);
+                    return res.status(500).json({ message: "Error deleting image" });
                 }
+                console.log("Cloudinary delete result:", result);
             });
         }
 
@@ -180,8 +185,11 @@ const updateItem = async (req: Request, res: Response) => {
         const userId = decodedToken.id;
 
         // add image to the request body
-        const image = req.file?.filename || "default.png";
+        const image = req.file?.path || "default.png";
         req.body.image = image;
+        const image_id = req.file?.filename
+        req.body.image_id = image_id
+
         const validatedItem = itemUpdateRequestSchema.parse(req.body)
         const exist = await fetchItemById(validatedItem.id)
 

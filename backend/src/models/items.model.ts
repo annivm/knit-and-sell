@@ -10,7 +10,9 @@ export const itemSchema = z.object (
         size: z.string(),
         color: z.string(),
         category: z.string(),
-        image: z.string().min(5, "Format: Filename + extension.").optional().or(z.literal('')),
+        other: z.string(),
+        image: z.string().optional().or(z.literal('')),
+        image_id: z.string().optional(),
         owner_id: z.string().uuid(),
         created: z.string(),
         updated: z.string(),
@@ -29,7 +31,8 @@ export const itemCreateRequestSchema = z.object(
         color: z.string().optional(),
         category: z.string().optional(),
         other: z.string().optional(),
-        image: z.string().min(5, "Format: Filename + extension.").optional().or(z.literal('')),
+        image: z.string().optional().or(z.literal('')),
+        image_id: z.string().optional(),
         owner_id: z.string().uuid()
     }
 )
@@ -51,7 +54,8 @@ export const itemUpdateRequestSchema = z.object(
         color: z.string().optional(),
         category: z.string().optional(),
         other: z.string().optional(),
-        image: z.string().min(5, "Format: Filename + extension.").optional().or(z.literal(''))
+        image: z.string().optional().or(z.literal('')),
+        image_id: z.string().optional()
     }
   )
   export type ItemUpdateRequest = z.infer<typeof itemUpdateRequestSchema>

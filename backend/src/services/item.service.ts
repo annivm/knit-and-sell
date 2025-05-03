@@ -17,6 +17,7 @@ const fetchItems = async(): Promise<Item[]> => {
             items.category,
             items.other,
             items.image,
+            items.image_id,
             items.owner_id,
             users.name AS owner_name
         FROM items
@@ -46,6 +47,7 @@ const fetchItemsByOwner = async (ownerId: string): Promise<Item[]> => {
             items.category,
             items.other,
             items.image,
+            items.image_id,
             items.owner_id,
             users.name AS owner_name
         FROM items
@@ -80,10 +82,10 @@ const fetchItemById = async(id: number): Promise<Item | null> => {
 // insertItem
 const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
     try {
-        const { name, price, description, material, size, color, category, other, image, owner_id } = item
+        const { name, price, description, material, size, color, category, other, image, image_id, owner_id } = item
         const sql = `INSERT into items
-                    (name, price, description, material, size, color, category, other, image, owner_id)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;`
+                    (name, price, description, material, size, color, category, other, image, image_id, owner_id)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;`
         const { rows } = await pool.query(sql, [
             name,
             price,
@@ -94,6 +96,7 @@ const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
             category || null,
             other || null,
             image || "default.png",
+            image_id || null,
             owner_id
         ])
         //console.log(rows);
@@ -150,10 +153,10 @@ const deleteItemById = async (id: number): Promise<number | null> =>{
 // updateItemById
 const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
     try {
-        const { id, name, description, price, material, size, color, category, other, image } = item
+        const { id, name, description, price, material, size, color, category, other, image, image_id } = item
         const sql = `UPDATE items
-                    SET name=$1, description=$2, price=$3, material=$4, size=$5, color=$6, category=$7, other=$8, image=$9
-                    WHERE id=$10 RETURNING *;`
+                    SET name=$1, description=$2, price=$3, material=$4, size=$5, color=$6, category=$7, other=$8, image=$9, image_id=$10
+                    WHERE id=$11 RETURNING *;`
         const { rows } = await pool.query(sql,[
             name,
             description,
@@ -164,6 +167,7 @@ const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
             category || null,
             other || null,
             image || "default.png",
+            image_id || null,
             id
         ])
 

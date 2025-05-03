@@ -138,7 +138,11 @@ const EditItem = () => {
             <h2>Edit Item</h2>
             <form className="item-form" onSubmit={itemSubmitHandler}>
                 <div className="item__image">
-                    <img src={`${import.meta.env.VITE_API_URL}/images/${data.image}`} alt={data.name}/>
+                    {/* USE THIS WHEN DEPLOYING <img src={data.image} alt={data.name}/> */}
+                    <img
+                        src={data.image.startsWith("http") ? data.image : `${import.meta.env.VITE_API_URL}/images/${data.image || "default.png"}`}
+                        alt={data.name}
+                    />
                 </div>
                 <Input id="name" ref={nameRef} type="text" label="Name"/>
                 {inputErrors.name && <p className="error-message">{inputErrors.name}</p>}

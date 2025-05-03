@@ -79,8 +79,12 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
             <li className='item'>
                 <Card className="item__content">
                     <div className={`item__image ${showFullImage ? "item__image--scaled" : ""}`}>
-                        <img src={`${import.meta.env.VITE_API_URL}/images/${image || "default.png"}`} alt={name}/>
-                        {/* kuva kansiosta -> {`http://localhost:5001/images/${image}`} */}
+                        {/* USE THIS WHEN DEPLOYING <img src={image || "default.png"} alt={name}/> */}
+                        <img
+                            src={image.startsWith("http") ? image : `${import.meta.env.VITE_API_URL}/images/${image || "default.png"}`}
+                            alt={name}
+                        />
+                        {/* kuva kansiosta -> {`${import.meta.env.VITE_API_URL}/images/${image}`} */}
                     </div>
                     <div className='item__info'>
                         <h3>{name} - {price} €</h3>

@@ -2,21 +2,13 @@ import { Router } from "express";
 import { createItem, deleteItem, getItemById, getItems, getMyItems, updateItem } from "../controllers/item.controller";
 import { verifyToken } from "../middleware/verifyToken";
 import multer from 'multer';
+import { storage } from "../config/cloudinary";
 
 
-const router: Router = Router();
 
-// for image upload
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/images');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-})
 const upload = multer({ storage })
 
+const router: Router = Router();
 
 // http://localhost:5000/api/items/
 router.get('/', getItems);
