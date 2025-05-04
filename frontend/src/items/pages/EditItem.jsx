@@ -48,7 +48,7 @@ const EditItem = () => {
             colorRef.current.value = data.color || "";
             categoryRef.current.value = data.category || "";
             otherRef.current.value = data.other || "";
-            imageRef.current.value = data.image || "";
+            imageRef.current.value = "";
         }
     }, [data])
 
