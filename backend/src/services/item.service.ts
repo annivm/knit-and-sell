@@ -1,10 +1,10 @@
-import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { Request } from "express";
 import { pool } from "../db/db";
 import { Item, ItemCreateRequest, ItemUpdateRequest } from "../models/items.model";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { storage } from "../config/cloudinary";
-import { Request } from "express";
-import fs from 'fs';
 import cloudinary from 'cloudinary';
+import fs from 'fs';
 
 // fetchItems
 const fetchItems = async(): Promise<Item[]> => {
@@ -99,7 +99,7 @@ const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
             color || null,
             category || null,
             other || null,
-            image || "default.png",
+            image || DEFAULT_IMAGE,
             image_id || null,
             owner_id
         ])
@@ -170,7 +170,7 @@ const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
             color || null,
             category || null,
             other || null,
-            image || "default.png",
+            image || DEFAULT_IMAGE,
             image_id || null,
             id
         ])
