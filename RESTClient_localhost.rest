@@ -1,0 +1,41 @@
+GET https://market-backend-2zwz.onrender.com/api/items
+###
+
+GET https://market-backend-2zwz.onrender.com/api/items/1
+###
+
+POST https://market-backend-2zwz.onrender.com/api/items
+Content-Type: application/json
+Authorization: BEARER {{authToken}}
+
+{
+    "name": "item",
+    "description": "item description",
+    "price": "10.00"
+}
+###
+
+DELETE https://market-backend-2zwz.onrender.com/api/items/4
+Authorization: BEARER {{authToken}}
+###
+
+POST https://market-backend-2zwz.onrender.com/api/users/signup
+Content-Type: application/json
+
+{
+    "name": "John Smith",
+    "email": "john@smith.com",
+    "password": "1234"
+}
+###
+
+# @name login
+POST https://market-backend-2zwz.onrender.com/api/users/login
+Content-Type: application/json
+
+{
+    "email": "john@smith.com",
+    "password": "1234"
+}
+###
+@authToken = {{login.response.body.token}}
