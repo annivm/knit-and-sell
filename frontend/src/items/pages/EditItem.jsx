@@ -125,7 +125,7 @@ const EditItem = () => {
             color: colorRef.current?.value || "",
             category: categoryRef.current?.value || "",
             other: otherRef.current?.value || "",
-            image: imageFile,
+            image: imageFile || data.image,
             token: token,
             userId: userId
         };

@@ -20,7 +20,7 @@ const ItemsList = ({items, userId, heading}) =>{
                         color={item.color || ""}
                         category={item.category || ""}
                         other={item.other || ""}
-                        image={item.image}
+                        image={item.image || "default.png"}
                         owner={item.owner_name}
                         isOwner={item.owner_id === userId}
                     />

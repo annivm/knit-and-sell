@@ -1,6 +1,10 @@
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { pool } from "../db/db";
 import { Item, ItemCreateRequest, ItemUpdateRequest } from "../models/items.model";
-
+import { storage } from "../config/cloudinary";
+import { Request } from "express";
+import fs from 'fs';
+import cloudinary from 'cloudinary';
 
 // fetchItems
 const fetchItems = async(): Promise<Item[]> => {
@@ -180,6 +184,52 @@ const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
       }
 }
 
+const DEFAULT_IMAGE = "default.png";
+const DEFAULT_IMAGE_ID = "default.png";
+
+// check if the image is uploaded to cloudinary or local storage or use default image
+const handleImageData = (req: Request) => {
+    if (!req.file)
+        return {
+            image: DEFAULT_IMAGE,
+            image_id: DEFAULT_IMAGE_ID
+        }
+    if (storage instanceof CloudinaryStorage) {
+        return {
+            image: req.file.path,
+            image_id: req.file.filename
+        }
+    } else {
+        return {
+            image: req.file.filename,
+            image_id: req.file.filename
+        }
+    }
+};
+
+const handleImageDelete = async (item: { image?: string; image_id?: string} ) => {
+    if (storage instanceof CloudinaryStorage) {
+        if (item.image_id && item.image !== "default.png") {
+                const publicId = item.image_id
+            await cloudinary.v2.uploader.destroy(publicId)
+                .then(result => console.log("Cloudinary delete result:", result))
+                .catch(error => console.error("Cloudinary deletion error:", error));
+        }
+    } else {
+        // Delete the old image from local storage
+        const imagePath = `uploads/images/${item.image}`;
+        if( fs.existsSync(imagePath)) {
+            fs.unlink(imagePath, (err: any) => {
+                if (err) {
+                    console.error('Error deleting image:', err);
+                } else {
+                    console.log('Image deleted successfully');
+                }
+            })
+        }
+    }
+}
+
 export {
     fetchItems,
     fetchItemsByOwner,
@@ -187,5 +237,7 @@ export {
     insertItem,
     findByName,
     deleteItemById,
-    updateItemById
+    updateItemById,
+    handleImageData,
+    handleImageDelete
 }

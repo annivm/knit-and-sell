@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import { deleteItemById, fetchItemById, fetchItems, fetchItemsByOwner, findByName, insertItem, updateItemById } from "../services/item.service";
+import { deleteItemById, fetchItemById, fetchItems, fetchItemsByOwner, findByName, insertItem, updateItemById, handleImageData, handleImageDelete } from "../services/item.service";
 import { itemByIdRequestSchema, itemCreateRequestSchema, itemUpdateRequestSchema } from "../models/items.model";
 import { ZodError } from "zod";
 import jwt from 'jsonwebtoken';
 import { config } from "../config/env";
 import cloudinary from 'cloudinary';
 import { storage } from "../config/cloudinary";
-
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import fs from 'fs';
 
 const getItems = async (req: Request, res:Response): Promise<void> =>{
     try{
@@ -83,14 +84,12 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
             return
         }
 
-        // add image to the request body
-        const image = req.file?.path || "default.png";
-        const image_id = req.file?.filename
-        // console.log(req.file)
+        // Add image to the request body
+        const { image, image_id } = handleImageData(req);
         req.body.image = image;
         req.body.image_id = image_id
 
-        //const image_id = req.file?.public_id
+
         const validatedItem = itemCreateRequestSchema.parse(req.body);
         const data = await insertItem(validatedItem)
         // console.log(validatedItem);
@@ -144,18 +143,10 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Delete the image from Cloudinary
-        if (item.image_id && item.image !== "default.png") {
-                const publicId = item.image_id
-            await cloudinary.v2.uploader.destroy(publicId, function(error, result) {
-                if (error) {
-                    console.log("Error deleting image from Cloudinary:", error);
-                    return res.status(500).json({ message: "Error deleting image" });
-                }
-                console.log("Cloudinary delete result:", result);
-            });
-        }
+        // Delete the image from Cloudinary or local storage
+        await handleImageDelete(item)
 
+        // Delete the item from the database
         await deleteItemById(validatedId)
 
         res.status(200).json({ message: "Item deleted successfully" });
@@ -184,10 +175,9 @@ const updateItem = async (req: Request, res: Response) => {
         if (!decodedToken.id || decodedToken.id === undefined) {}
         const userId = decodedToken.id;
 
-        // add image to the request body
-        const image = req.file?.path || "default.png";
+        // add image to the request body if it was given
+        const { image, image_id } = handleImageData(req);
         req.body.image = image;
-        const image_id = req.file?.filename
         req.body.image_id = image_id
 
         const validatedItem = itemUpdateRequestSchema.parse(req.body)
@@ -206,6 +196,12 @@ const updateItem = async (req: Request, res: Response) => {
         }
 
         const data = await updateItemById(validatedItem)
+
+        // Delete the old image from Cloudinary or local storage
+        if(req.file) {
+            await handleImageDelete(exist)
+        }
+
         res.status(200).send(data)
     } catch (error) {
         if (error instanceof ZodError) {
