@@ -1,10 +1,10 @@
-GET http://localhost:5002/api/items
+GET https://market-backend-2zwz.onrender.com/api/items
 ###
 
-GET http://localhost:5002/api/items/1
+GET https://market-backend-2zwz.onrender.com/api/items/1
 ###
 
-POST http://localhost:5002/api/items
+POST https://market-backend-2zwz.onrender.com/api/items
 Content-Type: application/json
 Authorization: BEARER {{authToken}}
 
@@ -15,11 +15,11 @@ Authorization: BEARER {{authToken}}
 }
 ###
 
-DELETE http://localhost:5002/api/items/7
+DELETE https://market-backend-2zwz.onrender.com/api/items/4
 Authorization: BEARER {{authToken}}
 ###
 
-POST http://localhost:5002/api/users/signup
+POST https://market-backend-2zwz.onrender.com/api/users/signup
 Content-Type: application/json
 
 {
@@ -30,7 +30,7 @@ Content-Type: application/json
 ###
 
 # @name login
-POST http://localhost:5002/api/users/login
+POST https://market-backend-2zwz.onrender.com/api/users/login
 Content-Type: application/json
 
 {
