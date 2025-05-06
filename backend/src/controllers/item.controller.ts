@@ -175,9 +175,11 @@ const updateItem = async (req: Request, res: Response) => {
         const userId = decodedToken.id;
 
         // add image to the request body if it was given
-        const { image, image_id } = handleImageData(req);
-        req.body.image = image;
-        req.body.image_id = image_id
+        if (req.file) {
+            const { image, image_id } = handleImageData(req);
+            req.body.image = image;
+            req.body.image_id = image_id
+        }
 
         const validatedItem = itemUpdateRequestSchema.parse(req.body)
         const exist = await fetchItemById(validatedItem.id)
