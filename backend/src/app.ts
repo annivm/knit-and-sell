@@ -11,7 +11,6 @@ dotenv.config();
 const app: Application = express();
 
 app.use(express.static('public'))
-app.use(express.static('uploads'))
 app.use(express.json());
 
 app.use(cors({
