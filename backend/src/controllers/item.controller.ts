@@ -4,10 +4,6 @@ import { itemByIdRequestSchema, itemCreateRequestSchema, itemUpdateRequestSchema
 import { ZodError } from "zod";
 import jwt from 'jsonwebtoken';
 import { config } from "../config/env";
-import cloudinary from 'cloudinary';
-import { storage } from "../config/cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import fs from 'fs';
 
 const getItems = async (req: Request, res:Response): Promise<void> =>{
     try{
@@ -61,7 +57,7 @@ const getItemById = async (req: Request, res:Response): Promise<void> =>{
         res.json(data)
 
     } catch (error) {
-        res.send(500).json({ message: 'Internal server error'})
+        res.status(500).json({ message: 'Internal server error'})
     }
 }
 
@@ -123,7 +119,10 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         const decodedToken = jwt.verify(token, config.JWT_KEY) as { id: string };
-        if (!decodedToken.id || decodedToken.id === undefined) {}
+        if (!decodedToken.id || decodedToken.id === undefined) {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
         const userId = decodedToken.id;
         //console.log("userId: " + userId);
 
