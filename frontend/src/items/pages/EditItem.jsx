@@ -60,7 +60,7 @@ const EditItem = () => {
             history.push("/");
         },
         onError: (error) => {
-            console.error(error.response?.error);
+            // console.error(error.response?.error);
             if (error.response?.error) {
                 // Get all errors from the inputs
                 const errors = {};
@@ -138,7 +138,6 @@ const EditItem = () => {
             <h2>Edit Item</h2>
             <form className="item-form" onSubmit={itemSubmitHandler}>
                 <div className="item__image">
-                    {/* USE THIS WHEN DEPLOYING <img src={data.image} alt={data.name}/> */}
                     <img
                         src={data.image.startsWith("http") ? data.image : `${import.meta.env.VITE_API_URL}/images/${data.image || "default.png"}`}
                         alt={data.name}

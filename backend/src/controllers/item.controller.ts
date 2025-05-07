@@ -76,7 +76,10 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
        const existingItem = await findByName(name);
 
        if (existingItem != null) {
-            res.status(400).json({ message: "Item already exist" });
+            const error = [{
+                field: 'name',
+                message: 'Item with this name already exist'}]
+            res.status(400).json({ error: error });
             return
         }
 
@@ -188,6 +191,18 @@ const updateItem = async (req: Request, res: Response) => {
             res.status(400).json({ error: "Trying to update a non existing item" })
             return
         }
+
+        // check if the item with same name already exist
+        const name = req.body.name;
+        const existingItem = await findByName(name);
+
+        if (existingItem != null) {
+             const error = [{
+                 field: 'name',
+                 message: 'Item with this name already exist'}]
+             res.status(400).json({ error: error });
+             return
+         }
 
         const itemOwner = exist.owner_id
 
