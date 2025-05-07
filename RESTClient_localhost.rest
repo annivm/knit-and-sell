@@ -15,7 +15,7 @@ Authorization: BEARER {{authToken}}
 }
 ###
 
-DELETE http://localhost:5002/api/items/7
+DELETE http://localhost:5002/api/items/5
 Authorization: BEARER {{authToken}}
 ###
 
