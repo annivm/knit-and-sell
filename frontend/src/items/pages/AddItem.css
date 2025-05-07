@@ -11,10 +11,10 @@
 }
 .image__upload {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem
+  margin: 1rem auto;
 }
 
 .item-form__actions {
@@ -30,9 +30,6 @@
 }
 
 @media (max-width: 395px) {
-  .image__upload {
-    flex-direction: column;
-  }
   .item-form__actions .button--inverse {
     margin-top: 0.5rem;
   }

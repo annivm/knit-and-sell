@@ -106,15 +106,15 @@ const AddItem = () =>{
                 <Input id="category" ref={categoryRef} type="text" label="Category (optional)"/>
                 <Input id="other" ref={otherRef} type="text" label="Other (optional)"/>
 
-                <div>
+                <div className="image__upload">
                     {imageFile && <p>{imageFile?.name}</p>}
                     <label htmlFor="file" className="button button--inverse" >+ Upload Image</label>
                     <input id="file" type="file" accept="image/*" onChange={handleImageChange}/>
-                </div>
 
-                <Button id="add-item" type="submit">
-                    Add Item
-                </Button>
+                    <Button id="add-item" type="submit">
+                        Add Item
+                    </Button>
+                </div>
             </form>
         </>
     )
