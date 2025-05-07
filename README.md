@@ -1,5 +1,5 @@
 
-Market Place Application
+🛒🛒🛒**Market Place Application**🛒🛒🛒
 
 This is a full-stack web application for managing and selling items. The application consists of a frontend built with React and a backend built with Node.js, Express, and PostgreSQL. Project is fully deployed on Render and images are uploaded to Cloudinary.
 
@@ -47,11 +47,10 @@ This is a full-stack web application for managing and selling items. The applica
     Requirements:
     - Node.js
     - Docker and DockerCompose
-    - PostgreSQL
     - Cloudinary (optional, used for image uploads)
 
 
-    Installation (Git Bash):
+    Installation (Git Bash/terminal):
 
     1. Clone the repository
         git clone git@github.com:5G00EV16-3004/2025-final-project-annivm.git
@@ -61,7 +60,7 @@ This is a full-stack web application for managing and selling items. The applica
         cd backend
         npm install
 
-        Create .env -file in the backend folder
+        Create .env -file in the backend folder:
             PORT=5002
             DB_USER=postgres
             DB_HOST=localhost
@@ -84,7 +83,7 @@ This is a full-stack web application for managing and selling items. The applica
         cd ../frontend
         npm install
 
-        Create .env -file in the frontend folder
+        Create .env -file in the frontend folder:
             VITE_API_URL=http://localhost:5002
 
         npm run dev
