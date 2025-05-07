@@ -141,7 +141,7 @@ describe('POST item endpoint', () => {
         .set('Authorization', 'Bearer ' + loggedInUser.token)
         .send(item);
         expect(response.status).toEqual(400);
-        expect(response.body.message).toContain('Item already exist');
+        expect(response.body.error.some((e: any) => e.message.includes('Item with this name already exist'))).toBeTruthy();
     });
 
     test('should not allow no name property', async () =>{
