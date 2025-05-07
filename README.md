@@ -92,3 +92,8 @@ This is a full-stack web application for managing and selling items. The applica
 
     4. Start database using docker
         docker-compose up db --build
+
+
+Color palette used in this project:
+https://coolors.co/palette/223843-eff1f3-dbd3d8-d8b4a0-d77a61
+![alt text](image.png)
