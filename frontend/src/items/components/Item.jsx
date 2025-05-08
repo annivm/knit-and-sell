@@ -145,7 +145,7 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
                 }
             >
                 <p>Thank you for your purchase!</p>
-                <p>You will recieve a confirmation email shortly.</p>
+                <p>You will receive a confirmation email shortly.</p>
                 <p>Enjoy your new item!</p>
                 <p>Best regards, {owner}</p>
                 <p className='modal__emoji'>🫱🏻‍🫲🏻</p>

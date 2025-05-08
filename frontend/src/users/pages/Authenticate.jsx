@@ -89,7 +89,7 @@ const Authenticate = () => {
             }
             <Input id="email" ref={emailRef} type="text" label="Email" />
             <Input id="password" ref={passwordRef} type="password" label="Password" />
-            <Button type="submit" disable={signUpUserMutation.isLoading}>
+            <Button type="submit" disabled={signUpUserMutation.isLoading}>
                 {
                     isLoginMode? 'LOGIN' : 'SIGNUP'
                 }

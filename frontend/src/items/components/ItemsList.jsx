@@ -35,7 +35,7 @@ const ItemsList = ({items, userId, heading}) =>{
     )
 }
 
-ItemsList.prototype = {
+ItemsList.propTypes = {
     items: PropTypes.array
 }
 
