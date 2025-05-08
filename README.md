@@ -41,8 +41,3 @@ This is a full-stack web application for managing and selling items. The applica
         -> Backend http://localhost:5002
         -> Frontend http://localhost:8082
         -> Adminer(Database): http://localhost:8081
-
-
-Color palette used in this project:
-https://coolors.co/palette/223843-eff1f3-dbd3d8-d8b4a0-d77a61
-![alt text](color-palette.png)
