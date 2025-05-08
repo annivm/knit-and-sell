@@ -26,9 +26,6 @@ beforeAll( async() => {
     loggedInUser.id = response.body.id
     loggedInUser.email = response.body.email
     loggedInUser.token = response.body.token
-
-    console.log(loggedInUser);
-
 })
 
 afterEach( async () => {
@@ -300,7 +297,7 @@ describe('DELETE item endpoint', () => {
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + loggedInUser.token)
         expect(response.status).toEqual(200)
-        expect(response.body).toEqual({ message: "Item deleted successfully" })
+        expect(response.body).toEqual({ message: `Item "${item.name}" deleted successfully.` })
     });
 
     test('should not allow delete non-existing item', async() => {
