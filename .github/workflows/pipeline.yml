@@ -7,8 +7,6 @@ on:
 env:
     REGISTRY: ghcr.io
     REPOSITORY: ${{github.repository}}
-    # FRONTEND_IMAGE_NAME: 5g00ev16-3004/2025-final-project-annivm-frontend
-    # BACKEND_IMAGE_NAME: 5g00ev16-3004/2025-final-project-annivm-backend
 
 jobs:
     test:
@@ -68,7 +66,6 @@ jobs:
           working-directory: ./frontend
           run: npm run build
 
-
     deploy:
         name: Server Deployment
         needs: test
@@ -82,101 +79,3 @@ jobs:
 
           - name: Deploy frontend to Render
             run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-# not needed for render deployment
-# build:
-#         name: Build Container Images
-#         runs-on: ubuntu-latest
-#         needs: test
-#         permissions:
-#           contents: read
-#           packages: write
-#         steps:
-#           - name: Fetch Code
-#             uses: actions/checkout@v4
-
-#           - name: set up QEMU
-#             uses: docker/setup-qemu-action@v3.3.0
-
-#           - name: set up docker buildx
-#             uses: docker/setup-buildx-action@v3
-
-#           - name: docker login
-#             uses: docker/login-action@v3.3.0
-#             with:
-#               registry: ${{ env.REGISTRY }}
-#               username: ${{ github.actor }}
-#               password: ${{ secrets.GITHUB_TOKEN }}
-
-#           - name: build and push backend image
-#             uses: docker/build-push-action@v5.0.0
-#             with:
-#               context: ./backend
-#               file: ./backend/Dockerfile
-#               push: true
-#               tags: '${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}'
-
-#           - name: Copy production env file to frontend folder
-#             working-directory: ./frontend
-#             run: echo '${{ secrets.ENV_FILE_PROD }}' > .env
-
-#           - name: build and push frontend image
-#             uses: docker/build-push-action@v5.0.0
-#             with:
-#               context: ./frontend
-#               file: ./frontend/Dockerfile
-#               push: true
-#               tags: "${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}"
-
-          # AWS deployment
-          # deploy:
-          #   name: Server Deployment
-          #   needs: build
-
-          #   runs-on: ubuntu-latest
-          #   steps:
-          #     - name: Fetch Code
-          #       uses: actions/checkout@v4
-          # - name: Setup SSH
-          #   run: |
-          #       mkdir -p ~/.ssh
-          #       echo "${{ secrets.DEPLOY_KEY_PRIVATE }}" > ~/.ssh/id_rsa
-          #       chmod 600 ~/.ssh/id_rsa
-          #       ssh-keyscan -H ${{ secrets.REMOTE_SERVER }} >> ~/.ssh/known_hosts
-
-          # - name: Install rsync
-          #   run: sudo apt --assume-yes --no-install-recommends install rsync
-
-          # - name: Rsync to EC2
-          #   run: |
-          #       mkdir -p market_project_stack
-          #       cp docker-compose.server.yml market_project_stack/docker-compose.yml
-          #       echo "${{ secrets.ENV_FILE_PROD }}" > market_project_stack/.env
-          #       echo "BACKEND_IMAGE=${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}" >> market_project_stack/.env
-          #       echo "FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}" >> market_project_stack/.env
-          #       rsync -r market_project_stack "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }}:./"
-
-          # - name: Start containers
-          #   run: |
-          #       ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} << EOF
-          #       docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-          #       cd market_project_stack
-          #       docker-compose pull
-          #       docker-compose up -d
-          #       EOF
-
-            # If using local db add these lines to the rsync before echoes
-            # mkdir -p market_project_stack/db
-            # cp db/init.prod.sql market_project_stack/db
