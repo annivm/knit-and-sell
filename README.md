@@ -68,14 +68,17 @@ Challenges:
         Eventually, I used the Diner project as a base, which helped things move forward.
 
     Understanding ports
-        It took some effort to understand how ports worked across the backend, frontend, and Docker containers, but experimenting helped clarify this.
+        It took some effort to understand how ports worked across the backend, frontend,
+        and Docker containers, but experimenting helped clarify this.
 
     Deploying
         Deployment was time-consuming.
         I experimented with different platforms before choosing Render as the simplest solution.
         Setting up the deployment pipeline and managing environment secrets took effort.
-        Initially, I tried deploying to AWS via Learner Lab, but I didn’t realize it shuts down instances after the lab ends — lesson learned!
-        I looked up last falls course records and youtube for deploying on Render and got it running quite nicely.
+        Initially, I tried deploying to AWS via Learner Lab,
+        but I didn’t realize it shuts down instances after the lab ends, yep my bad!
+        I looked up last falls course records and youtube for deploying on Render
+        and got it running quite nicely.
 
     Images
         I chose to try implement image upload. This was a rewarding but challenging task.
