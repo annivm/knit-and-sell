@@ -4,6 +4,7 @@
 This is a full-stack web application for managing and selling items. The application consists of a frontend built with React, a backend built with Node.js and Express and a database using PostgreSQL. Project is fully deployed on Render and images are uploaded to Cloudinary.
 
 🌐 Deployed project: https://knit-and-sell.onrender.com/
+(it's free tier, so some slowness is expected and normal)
 
 
 🐳 RUNNING THE APPLICATION LOCALLY USING DOCKER:
@@ -11,6 +12,10 @@ This is a full-stack web application for managing and selling items. The applica
     Requirements:
     - Docker and Docker Compose
     - Cloudinary (optional, for image uploads)
+
+    Notes:
+    - Make sure docker is running
+    - Manage ports if needed
 
     1. Clone the repository
         git clone git@github.com:5G00EV16-3004/2025-final-project-annivm.git
