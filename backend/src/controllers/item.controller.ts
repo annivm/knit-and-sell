@@ -146,13 +146,20 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
 
         res.status(200).json({ message: `Item "${item.name}" deleted successfully.` });
     } catch (error) {
+        if (error instanceof ZodError) {
+            const errors = error.issues.map(err => ({
+                field: err.path.join('.'),
+                message: err.message}));
+            res.status(400).json({ error: errors })
+            return;
+        }
         if (error instanceof Error) {
             if ('errors' in error) {
-              res.status(400).json({ message: "Missing a required value" })
-              return
+            res.status(400).json({ error: "Failed to delete item" })
+            return
             }
-          }
-        res.status(500).json( {message: 'Internal server error'})
+        }
+        res.status(500).json({ error: 'Internal server error' })
     }
 };
 
@@ -187,7 +194,7 @@ const updateItem = async (req: Request, res: Response) => {
         const name = req.body.name;
         const existingItem = await findByName(name);
 
-        if (existingItem != null) {
+        if (existingItem !== null && existingItem.name !== name) {
              const error = [{
                  field: 'name',
                  message: 'Item with this name already exist'}]
