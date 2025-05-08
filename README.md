@@ -15,7 +15,7 @@ This is a full-stack web application for managing and selling items. The applica
 
     Notes:
     - Make sure docker is running
-    - Manage ports if needed
+    - Manage ports if needed (make sure to update changes to rest files too)
 
     1. Clone the repository
         git clone git@github.com:5G00EV16-3004/2025-final-project-annivm.git
