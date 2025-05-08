@@ -144,7 +144,7 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
         // Delete the item from the database
         await deleteItemById(validatedId)
 
-        res.status(200).json({ message: "Item deleted successfully" });
+        res.status(200).json({ message: `Item "${item.name}" deleted successfully.` });
     } catch (error) {
         if (error instanceof Error) {
             if ('errors' in error) {

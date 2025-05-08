@@ -1,19 +1,16 @@
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-
 import { useAuthContext } from "../../shared/context/auth-context";
-
-
 import { deleteItem } from "../api/items";
-import './Item.css'
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Button from '../../shared/components/Button/Button';
 import Card from '../../shared/components/Card/Card';
 import Modal from '../../shared/components/Modal/Modal';
+import './Item.css'
 
 
-const Item = ({ itemId, name, price, description, material, size, color, category, other, image, owner,isOwner }) => {
+const Item = ({ itemId, name, price, description, material, size, color, category, other, image, owner, isOwner, setDeleteMessage }) => {
 
     const history = useHistory();
     const { token } = useAuthContext();
@@ -31,11 +28,13 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
     const deleteItemMutation = useMutation({
         mutationFn: deleteItem,
         onSuccess: (data) => {
-            console.log(data);
             queryClient.invalidateQueries(['items'])
+            setDeleteMessage(data.message);
+            setTimeout( () => setDeleteMessage(""), 5000);
         },
         onError: (error) => {
-            console.error(error)
+            setDeleteMessage("Failed to delete item. " + error);
+            setTimeout( () => setDeleteMessage(""), 5000);
         }
     })
 
@@ -52,7 +51,7 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
     }
 
     const toggleDescriptionHandler = () => {
-        setShowDescription((prevState) => !prevState);
+        setShowDescription((prevState) => !prevState); // Show/hide info
         setShowFullImage((prevState) => !prevState);
     };
 
@@ -71,6 +70,7 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
         { label: "🗂️ Category", value: category },
         { label: "💬 Other", value: other },
     ];
+
     // Filter out rows where the value is empty or null
     const filteredDetails = itemDetails.filter(detail => detail.value);
 
@@ -102,7 +102,6 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
                                 </table>
                             </div>
                         )}
-
                     </div>
                     {isOwner ? (
                         <div className='item__actions'>
@@ -122,7 +121,7 @@ const Item = ({ itemId, name, price, description, material, size, color, categor
                     )}
                 </Card>
             </li>
-            {/* Modal for editing */}
+            {/* Modal for deleting */}
             <Modal
                 show = {showConfirmationModal}
                 header="Are you sure?"
@@ -167,7 +166,8 @@ Item.propTypes = {
     other: PropTypes.string,
     owner: PropTypes.string.isRequired,
     isOwner: PropTypes.bool.isRequired,
-    image: PropTypes.string.isRequired
+    image: PropTypes.string.isRequired,
+    setDeleteMessage: PropTypes.func.isRequired,
 }
 
 
