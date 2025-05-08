@@ -9,7 +9,6 @@ export const AuthContextProvider = ({ children }) => {
   const [tokenExpirationDate, setTokenExpirationDate] = useState(false);
 
   const login = useCallback((uid, token, expirationDate) => {
-    //console.log(token)
     setToken(token);
     setUserId(uid);
 

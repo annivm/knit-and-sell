@@ -18,7 +18,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
         }
         // checking if the token is in the right format
         const token = authHeader.split(' ')[1];
-        //console.log('token'+token);
 
         if (!token) {
             res.status(401).json({ message: "Authentication failed: Invalid token format" });
@@ -26,8 +25,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
         }
 
         const decodedToken = jwt.verify(token, config.JWT_KEY) as JwtPayload;
-        //console.log('decoded token');
-        //console.log(decodedToken);
 
         if (!decodedToken || typeof decodedToken !== 'object' || !decodedToken.id) {
             res.status(401).json({ message: "Authentication failed: Token could not be verified" });

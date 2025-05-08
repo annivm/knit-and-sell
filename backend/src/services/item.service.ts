@@ -6,7 +6,6 @@ import { storage } from "../config/cloudinary";
 import cloudinary from 'cloudinary';
 import fs from 'fs';
 
-// fetchItems
 const fetchItems = async(): Promise<Item[]> => {
     try {
         const query = `
@@ -28,11 +27,9 @@ const fetchItems = async(): Promise<Item[]> => {
         INNER JOIN users ON items.owner_id = users.id
         `;
         const response = await pool.query(query);
-        //console.log(response.rows);
-        return response.rows;
 
+        return response.rows;
     } catch (error) {
-        console.error(`error fetching items (${error})`)
         throw new Error('Database error')
     }
 }
@@ -59,16 +56,14 @@ const fetchItemsByOwner = async (ownerId: string): Promise<Item[]> => {
         WHERE items.owner_id = $1
         `;
         const { rows } = await pool.query(query, [ownerId]);
+
         return rows;
     } catch (error) {
-        console.error('Database query error:', error);
         throw new Error('Database query failed');
     }
 };
 
-// fetchItemById
 const fetchItemById = async(id: number): Promise<Item | null> => {
-
     try {
         const query = `
         SELECT
@@ -94,15 +89,13 @@ const fetchItemById = async(id: number): Promise<Item | null> => {
         if(response.rows.length === 0){
             return null
         }
+
         return response.rows[0]
     } catch (error) {
-        console.error('Database query error: ', error)
         throw new Error("Database query failed");
     }
 }
 
-
-// insertItem
 const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
     try {
         const { name, price, description, material, size, color, category, other, image, image_id, owner_id } = item
@@ -122,44 +115,32 @@ const insertItem = async(item: ItemCreateRequest): Promise<Item> => {
             image_id || null,
             owner_id
         ])
-        //console.log(rows);
 
         return rows[0]
-
       } catch (error) {
-        console.error('Database query error: ', error)
         throw new Error('Database query failed')
       }
 }
 
-
-// findByName
 const findByName = async (name: string): Promise<Item | null> => {
     try {
         const sql = 'SELECT * FROM items WHERE LOWER(name) = LOWER($1);';
-        //console.log(name);
-
         const { rows } = await pool.query(sql, [name])
 
-        //console.log(rows)
         if(rows.length === 0){
             return null
         }
+
         return rows[0]
     } catch (error) {
-        console.error('Database query error: ', error);
         throw new Error('Database query failed');
     }
 };
 
-
-// deleteItemById
 const deleteItemById = async (id: number): Promise<number | null> =>{
     try {
         const sql = 'DELETE FROM items WHERE id = $1;';
         const response = await pool.query(sql, [id]);
-
-        //console.log(response);
 
         if (response.rowCount === 0){
             return null
@@ -167,13 +148,10 @@ const deleteItemById = async (id: number): Promise<number | null> =>{
 
         return id
     } catch (error) {
-        console.error('Database query error: ', error)
     throw new Error('Database query failed')
     }
 }
 
-
-// updateItemById
 const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
     try {
         const { id, name, description, price, material, size, color, category, other, image, image_id } = item
@@ -194,11 +172,8 @@ const updateItemById = async (item: ItemUpdateRequest): Promise<Item> =>{
             id
         ])
 
-
         return rows[0]
-
       } catch(error) {
-        console.error('Database query error: ', error)
         throw new Error('Database query failed')
       }
 }
@@ -227,6 +202,7 @@ const handleImageData = (req: Request) => {
 };
 
 const handleImageDelete = async (item: { image?: string; image_id?: string} ) => {
+    // Delete the old image from cloudinary
     if (storage instanceof CloudinaryStorage) {
         if (item.image_id && item.image !== DEFAULT_IMAGE) {
                 const publicId = item.image_id

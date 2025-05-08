@@ -10,15 +10,12 @@ const upload = multer({ storage })
 
 const router: Router = Router();
 
-// http://localhost:5000/api/items/
 router.get('/', getItems);
-
 
 router.get('/myitems', getMyItems);
 
 router.get('/:id', getItemById)
 
-//router.post('/', createItem)
 router.post('/', upload.single('image'), verifyToken, createItem)
 
 router.delete('/:id', verifyToken, deleteItem)

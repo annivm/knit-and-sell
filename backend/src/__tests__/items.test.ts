@@ -286,7 +286,6 @@ describe('DELETE item endpoint', () => {
             description: 'Test desc',
             owner_id: loggedInUser.id
         };
-        // console.log("item to delete: " + item.name)
         const postResponse = await request(app)
         .post('/api/items')
         .set('Accept', 'application/json')
@@ -295,8 +294,6 @@ describe('DELETE item endpoint', () => {
         .send(item)
 
         const postId = postResponse.body.id
-        // console.log("postId: " + postId);
-        // console.log("loggedin user: " +loggedInUser.id);
 
         const response = await request(app)
             .delete(`/api/items/${postId}`)
@@ -343,7 +340,6 @@ describe('PUT item endpoint', () => {
             description: 'Test desc',
             owner_id: loggedInUser.id
         };
-        // console.log("item to update: " + item.name)
         const postResponse = await request(app)
             .post('/api/items')
             .set('Accept', 'application/json')
@@ -352,8 +348,6 @@ describe('PUT item endpoint', () => {
             .send(item)
 
         const postId = postResponse.body.id
-        // console.log("postId: " + postId);
-        // console.log("loggedin user: " +loggedInUser.id);
 
         const updatedItem = {
             id: postId,

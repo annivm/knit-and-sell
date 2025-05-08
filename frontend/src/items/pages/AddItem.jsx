@@ -26,7 +26,6 @@ const AddItem = () =>{
     const colorRef = useRef();
     const categoryRef = useRef();
     const otherRef = useRef();
-    //const imageRef = useRef();
 
     const createItemMutation = useMutation({
         mutationFn: createItem,
@@ -36,7 +35,6 @@ const AddItem = () =>{
             history.push('/');
         },
         onError: (error) => {
-            // console.error(error.response?.error);
             if (error.response?.error) {
                 // Get all errors from the inputs
                 const errors = {};
@@ -53,7 +51,6 @@ const AddItem = () =>{
 
     const handleImageChange = (event) => {
         const file = event.target.files[0]
-        // console.log(file)
         if (file) {
             setImageFile(file)
         } else {

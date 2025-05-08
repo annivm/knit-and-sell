@@ -6,7 +6,6 @@ import { loginUserRequestSchema, signUpUserSchema, UserCreateRequest } from "../
 import { config } from "../config/env";
 import { createUser, findByEmail } from '../services/users.service';
 import { ZodError } from "zod";
-import { console } from "inspector";
 
 const signUpUser = async (req: Request, res: Response) => {
     try{

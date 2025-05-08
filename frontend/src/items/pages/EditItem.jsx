@@ -60,7 +60,6 @@ const EditItem = () => {
             history.push("/");
         },
         onError: (error) => {
-            // console.error(error.response?.error);
             if (error.response?.error) {
                 // Get all errors from the inputs
                 const errors = {};
@@ -92,7 +91,6 @@ const EditItem = () => {
 
     const handleImageChange = (event) => {
         const file = event.target.files[0]
-        // console.log(file)
         if (file) {
             setImageFile(file)
             imageRef.current.value = file.name;
