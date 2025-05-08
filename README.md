@@ -53,18 +53,20 @@ Note! Buy-button does not have proper functionality yet. It only shows confirmat
 
 Base for this project is from "Diner project".
 
+Items and their features are made up by ChatGPT and images are taken from google.
+
 Key features:
-- user authentication (login/signup)
+- User authentication (login/signup)
 - Product listing (all and users own)
 - Add, edit and delete items
-- error handling to guide the user
+- Error handling to guide the user
 - Image uploads using Cloudinary (with fallback for running locally)
 
 Challenges:
 
     Trying to start project from scratch
         I initially tried to build the project completely from scratch but quickly felt overwhelmed.
-        To help structure my work, I created some Figma layouts, but progress was slow.
+        I created some Figma layouts, but wasn't quite sure where to start building.
         Eventually, I used the Diner project as a base, which helped things move forward.
 
     Understanding ports
@@ -86,4 +88,3 @@ Challenges:
         Switching to Cloudinary was a good move -> setup was simple and effective.
         For running the project locally I made Cloudinary optional with a fallback setup for local use.
         This required some workaround logic that may not follow best practices, but it works for now!
-
