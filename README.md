@@ -63,24 +63,24 @@ Key features:
 Challenges:
 
 Trying to start project from scratch
-    I initially tried to build the project completely from scratch but quickly felt overwhelmed.
-    To help structure my work, I created some Figma layouts, but progress was slow.
-    Eventually, I used the Diner project as a base, which helped things move forward.
+        I initially tried to build the project completely from scratch but quickly felt overwhelmed.
+        To help structure my work, I created some Figma layouts, but progress was slow.
+        Eventually, I used the Diner project as a base, which helped things move forward.
 
 Understanding ports
-    It took some effort to understand how ports worked across the backend, frontend, and Docker containers, but experimenting helped clarify this.
+        It took some effort to understand how ports worked across the backend, frontend, and Docker containers, but experimenting helped clarify this.
 
 Deploying
-    Deployment was time-consuming.
-    I experimented with different platforms before choosing Render as the simplest solution.
-    Setting up the deployment pipeline and managing environment secrets took effort.
-    Initially, I tried deploying to AWS via Learner Lab, but I didn’t realize it shuts down instances after the lab ends — lesson learned!
-    I looked up last falls course records and youtube for deploying on Render and got it running quite nicely.
+        Deployment was time-consuming.
+        I experimented with different platforms before choosing Render as the simplest solution.
+        Setting up the deployment pipeline and managing environment secrets took effort.
+        Initially, I tried deploying to AWS via Learner Lab, but I didn’t realize it shuts down instances after the lab ends — lesson learned!
+        I looked up last falls course records and youtube for deploying on Render and got it running quite nicely.
 
 Images
-    I chose to try implement image upload. This was a rewarding but challenging task.
-    At first, I stored images locally, but this failed in deployment.
-    Switching to Cloudinary was a good move -> setup was simple and effective.
-    For running the project locally I made Cloudinary optional with a fallback setup for local use.
-    This required some workaround logic that may not follow best practices, but it works for now!
+        I chose to try implement image upload. This was a rewarding but challenging task.
+        At first, I stored images locally, but this failed in deployment.
+        Switching to Cloudinary was a good move -> setup was simple and effective.
+        For running the project locally I made Cloudinary optional with a fallback setup for local use.
+        This required some workaround logic that may not follow best practices, but it works for now!
 
