@@ -207,7 +207,6 @@ const handleImageDelete = async (item: { image?: string; image_id?: string} ) =>
         if (item.image_id && item.image !== DEFAULT_IMAGE) {
                 const publicId = item.image_id
             await cloudinary.v2.uploader.destroy(publicId)
-                .then(result => console.log("Cloudinary delete result:", result))
                 .catch(error => console.error("Cloudinary deletion error:", error));
         }
     } else {
@@ -217,8 +216,6 @@ const handleImageDelete = async (item: { image?: string; image_id?: string} ) =>
             fs.unlink(imagePath, (err: any) => {
                 if (err) {
                     console.error('Error deleting image:', err);
-                } else {
-                    console.log('Image deleted successfully');
                 }
             })
         }
