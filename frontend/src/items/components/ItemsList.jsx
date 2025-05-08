@@ -3,14 +3,15 @@ import Item from "./Item"
 import './ItemList.css'
 import { useState } from "react";
 
-const ItemsList = ({items, userId, heading}) =>{
+const ItemsList = ({items, userId, heading, isEmpty}) =>{
 
     const [deleteMessage, setDeleteMessage] = useState("");
 
     return(
         <>
-            {deleteMessage && <p className="message">{deleteMessage}</p>}
+            { deleteMessage && <p className="message">{deleteMessage}</p> }
             <h1 className="heading">{heading}</h1>
+            { items.length === 0 && <p className="list_empty">{isEmpty}</p> }
             <ul className="item-list">
                 {items.map( (item) =>
                     <Item

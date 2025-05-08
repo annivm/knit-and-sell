@@ -27,7 +27,7 @@ const Items = () => {
     }
 
     return (
-        <ItemsList items={data} userId={userId} heading={"Items"}/>
+        <ItemsList items={data} userId={userId} heading={"Items"} isEmpty={"No items here...😒"}/>
     )
 }
 
