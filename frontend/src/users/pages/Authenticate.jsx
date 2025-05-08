@@ -32,7 +32,6 @@ const Authenticate = () => {
             setErrorMessage("");
         },
         onError: (error) => {
-            //console.error(error);
             setErrorMessage("Failed to signup. " + error);
         }
     })
@@ -44,7 +43,6 @@ const Authenticate = () => {
             setErrorMessage("");
         },
         onError: (error) => {
-            // console.log(error);
             setErrorMessage("Failed to login. " + error);
         }
     })

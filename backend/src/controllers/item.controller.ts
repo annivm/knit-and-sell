@@ -39,11 +39,9 @@ const getMyItems = async (req: Request, res: Response): Promise<void> => {
         const data = await fetchItemsByOwner(userId);
         res.json(data);
     } catch (error) {
-        //console.error('Error fetching user items:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 
 const getItemById = async (req: Request, res:Response): Promise<void> =>{
     try {
@@ -75,6 +73,7 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
        const name = req.body.name;
        const existingItem = await findByName(name);
 
+       // Check if the item with same name already exist
        if (existingItem != null) {
             const error = [{
                 field: 'name',
@@ -88,10 +87,8 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
         req.body.image = image;
         req.body.image_id = image_id
 
-
         const validatedItem = itemCreateRequestSchema.parse(req.body);
         const data = await insertItem(validatedItem)
-        // console.log(validatedItem);
 
         res.status(201).send(data);
 
@@ -115,7 +112,7 @@ const createItem = async (req: Request, res:Response): Promise<void> =>{
 
 const deleteItem = async (req: Request, res: Response): Promise<void> => {
     try {
-        // check if the logged in user is the owner
+        // check if user is logged in
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {
             res.status(401).json({ message: 'Unauthorized' });
@@ -126,20 +123,16 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
             res.status(401).json({ message: 'Unauthorized' });
             return;
         }
-        const userId = decodedToken.id;
-        //console.log("userId: " + userId);
 
         const validatedId = itemByIdRequestSchema.parse(req.params.id)
-        //console.log(validatedId);
-
         const item = await fetchItemById(validatedId);
-        //console.log(item?.id)
 
         if (!item) {
             res.status(404).json({ message: "Item not found" });
             return
         }
-        //console.log(item);
+        // Check if the user is the owner of the item
+        const userId = decodedToken.id;
         if (item.owner_id !== userId) {
             res.status(403).json({ message: 'Forbidden' });
             return;
@@ -163,11 +156,9 @@ const deleteItem = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-
-// update item
 const updateItem = async (req: Request, res: Response) => {
     try {
-        // check if the logged in user is the owner
+        // check if user is logged in
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {
             res.status(401).json({ error: 'Unauthorized' });
@@ -204,8 +195,8 @@ const updateItem = async (req: Request, res: Response) => {
              return
          }
 
+        // check if the logged in user is the owner
         const itemOwner = exist.owner_id
-
         if (itemOwner!== userId) {
             res.status(403).json({ error: 'Forbidden' });
             return;
@@ -213,7 +204,7 @@ const updateItem = async (req: Request, res: Response) => {
 
         const data = await updateItemById(validatedItem)
 
-        // Delete the old image from Cloudinary or local storage
+        // Delete the old image from Cloudinary or local storage if new one is uploaded
         if(req.file) {
             await handleImageDelete(exist)
         }

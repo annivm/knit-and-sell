@@ -8,7 +8,6 @@ import { createUser, findByEmail } from '../services/users.service';
 import { ZodError } from "zod";
 import { console } from "inspector";
 
-
 const signUpUser = async (req: Request, res: Response) => {
     try{
         const validUserSignUpData = signUpUserSchema.parse(req.body);
@@ -19,14 +18,11 @@ const signUpUser = async (req: Request, res: Response) => {
             return;
         }
 
-
         let hashedPassword;
 
         try {
             hashedPassword = await bcrypt.hash(validUserSignUpData.password, 12);
         } catch (error) {
-            console.log('Error hashing password: ', error);
-
             res.status(500).json({ message: "Could not create user, please try again." });
         }
 
@@ -53,8 +49,6 @@ const signUpUser = async (req: Request, res: Response) => {
                 config.JWT_KEY,  // secret key
                 { expiresIn: '1h' } // token expires in 1 hour
             );
-            //console.log('token');
-            //console.log(token);
 
             res.status(201).json(
                 {
@@ -64,13 +58,10 @@ const signUpUser = async (req: Request, res: Response) => {
                 }
             );
         } catch (error) {
-            console.log('Error creating user: ', error);
-
             res.status(500).json({ message: "SignUp failed" });
         }
     } catch (error) {
         if (error instanceof ZodError) {
-            console.log(error.errors)
             res.status(400).json({ message: error.issues[0].message });
             return;
         }
@@ -90,7 +81,6 @@ const loginUser = async (req: Request, res: Response) => {
         validUserLoginData = loginUserRequestSchema.parse(req.body);
     } catch (error) {
         if (error instanceof ZodError) {
-            console.log("Error:")
             res.status(400).json({ message: error.issues[0].message });
             return;
         }
@@ -103,20 +93,16 @@ const loginUser = async (req: Request, res: Response) => {
         return;
     }
 
-
     let identifiedUser;
     try {
         const data = await findByEmail(validUserLoginData.email);
-        //console.log(data);
         if (!data){
             res.status(401).json({ message: 'Could not identify user, credentials seem to be wrong.'});
             return;
         }
         identifiedUser = data;
-        //console.log(identifiedUser.password);
 
     } catch (error) {
-        //console.log(error);
         res.status(500).json({ message: "Login failed" });
         return;
     }
@@ -127,7 +113,6 @@ const loginUser = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        //console.log(error);
         res.status(500).json({ message:'Could not log you in, please check your credentials and try again.'});
         return;
     }
@@ -147,11 +132,7 @@ const loginUser = async (req: Request, res: Response) => {
             config.JWT_KEY,  // secret key
             { expiresIn: '1h' } // token expires in 1 hour
         )
-        //console.log('token');
-        //console.log(token);
-
     } catch (error) {
-        //console.log(error);
         res.status(500).json({ message: 'Something went wrong with the login, please try again' });
         return;
     }
@@ -163,7 +144,6 @@ const loginUser = async (req: Request, res: Response) => {
             email: identifiedUser.email
         }
     )
-
 }
 
 export { signUpUser, loginUser };
