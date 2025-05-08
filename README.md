@@ -8,9 +8,9 @@ This is a full-stack web application for managing and selling items. The applica
 
 🐳 RUNNING THE APPLICATION LOCALLY USING DOCKER:
 
-Requirements:
-- Docker and Docker Compose
-- Cloudinary (optional, for image uploads)
+    Requirements:
+    - Docker and Docker Compose
+    - Cloudinary (optional, for image uploads)
 
     1. Clone the repository
         git clone git@github.com:5G00EV16-3004/2025-final-project-annivm.git
@@ -62,22 +62,22 @@ Key features:
 
 Challenges:
 
-Trying to start project from scratch
+    Trying to start project from scratch
         I initially tried to build the project completely from scratch but quickly felt overwhelmed.
         To help structure my work, I created some Figma layouts, but progress was slow.
         Eventually, I used the Diner project as a base, which helped things move forward.
 
-Understanding ports
+    Understanding ports
         It took some effort to understand how ports worked across the backend, frontend, and Docker containers, but experimenting helped clarify this.
 
-Deploying
+    Deploying
         Deployment was time-consuming.
         I experimented with different platforms before choosing Render as the simplest solution.
         Setting up the deployment pipeline and managing environment secrets took effort.
         Initially, I tried deploying to AWS via Learner Lab, but I didn’t realize it shuts down instances after the lab ends — lesson learned!
         I looked up last falls course records and youtube for deploying on Render and got it running quite nicely.
 
-Images
+    Images
         I chose to try implement image upload. This was a rewarding but challenging task.
         At first, I stored images locally, but this failed in deployment.
         Switching to Cloudinary was a good move -> setup was simple and effective.
