@@ -22,7 +22,8 @@ d77a61 ORANSSI
 
 body {
   margin: 0;
-  background: #eff1f3;
+  background: inherit;
+  color: inherit;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -34,8 +35,8 @@ body {
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #eff1f3;
+  background-color: #223843;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -108,8 +109,8 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #223843;
+    background-color: #eff1f3;
   }
   a:hover {
     color: #747bff;
