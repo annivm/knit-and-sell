@@ -4,7 +4,7 @@
 This is a full-stack web application for managing and selling items. The application consists of a frontend built with React, a backend built with Node.js and Express and a database using PostgreSQL. Project is fully deployed on Render and images are uploaded to Cloudinary.
 
 🌐 Deployed project: https://knit-and-sell.onrender.com/
-(it's free tier, so some slowness is expected and normal)
+(it's free tier, so some slowness is expected and normal) UPDATE: database free tier expired -> not working!
 
 
 🐳 RUNNING THE APPLICATION LOCALLY USING DOCKER:
