@@ -18,7 +18,7 @@ This is a full-stack web application for managing and selling items. The applica
     - Manage ports if needed (make sure to update changes to rest files too)
 
     1. Clone the repository
-        git clone git@github.com:5G00EV16-3004/2025-final-project-annivm.git
+        git clone git@github.com:annivm/knit-and-sell.git
         cd 2025-final-project-annivm
 
     2. Create .env -file in the backend folder:
