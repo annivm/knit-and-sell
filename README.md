@@ -19,7 +19,7 @@ This is a full-stack web application for managing and selling items. The applica
 
     1. Clone the repository
         git clone git@github.com:annivm/knit-and-sell.git
-        cd 2025-final-project-annivm
+        cd knit-and-sell
 
     2. Create .env -file in the backend folder:
         PORT=5002
